@@ -18,8 +18,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ListView listView = (ListView) findViewById(R.id.list_view);
 
-        String[] values = new String[]{"Caricamento..."};
-
         final ProductListViewAdapter productListViewAdapter = new ProductListViewAdapter(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1);
         listView.setAdapter(productListViewAdapter);
