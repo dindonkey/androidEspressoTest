@@ -11,10 +11,9 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static android.support.test.espresso.matcher.ViewMatchers.*;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
@@ -34,12 +33,11 @@ public class MainActivityEspressoTest
     }
 
     @Test
-    public void listViewWithRemoteData() throws Exception
+    public void testIsSyncWithAsyncTask() throws Exception
     {
         onView(withId(R.id.list_view)).check(matches(isDisplayed()));
-//        onView(withText("Caricamento...")).check(matches(isDisplayed())); // il test viene eseguito alla fine dell'async
+        onView(withText("Caricamento...")).check(doesNotExist()); // il test viene eseguito alla fine dell'async
         onView(withText("Primo prodotto")).check(matches(isDisplayed()));
         onData(allOf(is("Primo prodotto"))).check(matches(isDisplayed()));
-
     }
 }
