@@ -7,6 +7,13 @@ public class ProductsApi
 {
     public String[] getProducts()
     {
-        return new String[]{"Primo prodotto"};
+        try
+        {
+            Thread.sleep(10000); //simulate slow network communication
+        } catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+        return new String[]{"First product"};
     }
 }

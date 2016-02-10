@@ -13,6 +13,6 @@ public class ProductsApiTest
     public void getProducts() throws Exception
     {
         ProductsApi productsApi = new ProductsApi();
-        assertEquals("Primo prodotto", productsApi.getProducts()[0]);
+        assertEquals("First product", productsApi.getProducts()[0]);
     }
 }

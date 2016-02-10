@@ -5,8 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import it.dindokey.testespresso.app.api.ProductsApi;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             protected String[] doInBackground(Void... params)
             {
-                String[] result = new String[]{"Primo prodotto"};
-                return result;
+                ProductsApi productsApi = ((MyApplication) getApplication()).getProductsApi();
+                return productsApi.getProducts();
             }
         }.execute();
 
