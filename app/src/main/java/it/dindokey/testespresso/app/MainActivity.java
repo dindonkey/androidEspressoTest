@@ -1,15 +1,15 @@
 package it.dindokey.testespresso.app;
 
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
-import it.dindokey.testespresso.app.api.ProductsApi;
+import it.dindokey.testespresso.app.api.MainView;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity implements MainView
 {
+    private ProductListViewAdapter productListViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -18,27 +18,12 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ListView listView = (ListView) findViewById(R.id.list_view);
 
-        final ProductListViewAdapter productListViewAdapter = new ProductListViewAdapter(this,
+        productListViewAdapter = new ProductListViewAdapter(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1);
         listView.setAdapter(productListViewAdapter);
 
-        new AsyncTask<Void, Void, String[]>()
-        {
-            @Override
-            protected void onPostExecute(String[] result)
-            {
-                productListViewAdapter.setValues(result);
-                productListViewAdapter.reload();
-            }
-
-            @Override
-            protected String[] doInBackground(Void... params)
-            {
-                ProductsApi productsApi = ((MyApplication) getApplication()).getProductsApi();
-                return productsApi.getProducts();
-            }
-        }.execute();
-
+        MainPresenter mainPresenter = new MainPresenter(this);
+        mainPresenter.onTakeView();
     }
 
     @Override
@@ -64,5 +49,12 @@ public class MainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void refreshProductList(String[] values)
+    {
+        productListViewAdapter.setValues(values);
+        productListViewAdapter.reload();
     }
 }
