@@ -1,28 +1,29 @@
 package it.dindokey.testespresso.app;
 
 import android.app.Application;
-import android.util.Log;
-import it.dindokey.testespresso.app.api.ProductsApi;
+import it.dindokey.testespresso.app.api.DaggerApiComponent;
+
 
 /**
  * Created by simone on 2/9/16.
  */
 public class MyApplication extends Application
 {
-    private ProductsApi productsApi;
+    private ApiComponent apiComponent;
 
-    public MyApplication()
+    @Override
+    public void onCreate()
     {
-        productsApi = new ProductsApi();
+        super.onCreate();
+        apiComponent = DaggerApiComponent.builder()
+                .appModule(new AppModule(this))
+                .apiModule(new ApiModule())
+                .build();
     }
 
-    public ProductsApi getProductsApi()
+    public ApiComponent getApiComponent()
     {
-        return productsApi;
+        return apiComponent;
     }
 
-    public void setProductsApi(ProductsApi productsApi)
-    {
-        this.productsApi = productsApi;
-    }
 }

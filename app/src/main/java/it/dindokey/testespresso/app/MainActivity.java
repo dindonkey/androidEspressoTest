@@ -8,13 +8,20 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import it.dindokey.testespresso.app.api.ProductsApi;
 
+import javax.inject.Inject;
+
 public class MainActivity extends AppCompatActivity
 {
+
+    @Inject
+    public ProductsApi productsApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        ((MyApplication) getApplication()).getApiComponent().inject(this);
+
         setContentView(R.layout.activity_main);
         ListView listView = (ListView) findViewById(R.id.list_view);
 
@@ -34,7 +41,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             protected String[] doInBackground(Void... params)
             {
-                ProductsApi productsApi = ((MyApplication) getApplication()).getProductsApi();
                 return productsApi.getProducts();
             }
         }.execute();
