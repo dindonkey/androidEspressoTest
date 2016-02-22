@@ -68,7 +68,6 @@ public class MainActivityEspressoTest
     @Test
     public void getProducts() throws Exception
     {
-        getApplication().setProductsApi(mockedProductsApi);
         when(mockedProductsApi.getProducts()).thenReturn(new String[]{"test product"});
 
         mActivityRule.launchActivity(new Intent());
@@ -77,9 +76,4 @@ public class MainActivityEspressoTest
         onView(withText("test product")).check(matches(isDisplayed()));
     }
 
-    private MyApplication getApplication()
-    {
-        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-        return (MyApplication)instrumentation.getTargetContext().getApplicationContext();
-    }
 }
