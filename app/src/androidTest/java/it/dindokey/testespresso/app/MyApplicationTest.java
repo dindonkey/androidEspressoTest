@@ -1,6 +1,7 @@
 package it.dindokey.testespresso.app;
 
 import it.dindokey.testespresso.app.api.ApiComponent;
+import it.dindokey.testespresso.app.api.DaggerTestApiComponent;
 import it.dindokey.testespresso.app.api.TestApiModule;
 
 /**

@@ -59,19 +59,6 @@ public class MainActivityEspressoTest
         onView(withText("Hello world!")).check(matches(isDisplayed()));
     }
 
-    @Ignore
-    @Test
-    public void espressoTestIsSyncWithAsyncTask() throws Exception
-    {
-        mActivityRule.launchActivity(new Intent());
-
-        // first onView waits for async task termination
-        onView(withId(R.id.list_view)).check(matches(isDisplayed()));
-        onView(withText("Loading...")).check(doesNotExist());
-        onView(withText("First product")).check(matches(isDisplayed()));
-        onData(allOf(is("First product"))).check(matches(isDisplayed()));
-    }
-
     @Test
     public void show_product_list() throws Exception
     {
@@ -82,5 +69,18 @@ public class MainActivityEspressoTest
         verify(mockedProductsApi).getProducts();
         onView(withText("test product")).check(matches(isDisplayed()));
     }
+
+//    @Ignore
+//    @Test
+//    public void espressoTestIsSyncWithAsyncTask() throws Exception
+//    {
+//        mActivityRule.launchActivity(new Intent());
+//
+//        // first onView waits for async task termination
+//        onView(withId(R.id.list_view)).check(matches(isDisplayed()));
+//        onView(withText("Loading...")).check(doesNotExist());
+//        onView(withText("First product")).check(matches(isDisplayed()));
+//        onData(allOf(is("First product"))).check(matches(isDisplayed()));
+//    }
 
 }

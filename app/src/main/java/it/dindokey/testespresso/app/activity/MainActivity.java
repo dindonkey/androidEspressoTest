@@ -6,17 +6,20 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import it.dindokey.testespresso.app.MainView;
 import it.dindokey.testespresso.app.MyApplication;
 import it.dindokey.testespresso.app.R;
 import it.dindokey.testespresso.app.api.ProductsApi;
 
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity implements MainView
 {
 
     @Inject
     public ProductsApi productsApi;
+
+    private ProductListViewAdapter productListViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -27,7 +30,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ListView listView = (ListView) findViewById(R.id.list_view);
 
-        final ProductListViewAdapter productListViewAdapter = new ProductListViewAdapter(this,
+        productListViewAdapter = new ProductListViewAdapter(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1);
         listView.setAdapter(productListViewAdapter);
 
@@ -36,8 +39,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             protected void onPostExecute(String[] result)
             {
-                productListViewAdapter.setValues(result);
-                productListViewAdapter.reload();
+                refreshProductList(result);
             }
 
             @Override
@@ -47,6 +49,13 @@ public class MainActivity extends AppCompatActivity
             }
         }.execute();
 
+    }
+
+    @Override
+    public void refreshProductList(String[] products)
+    {
+        productListViewAdapter.setValues(products);
+        productListViewAdapter.reload();
     }
 
     @Override
