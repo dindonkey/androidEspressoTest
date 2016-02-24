@@ -1,6 +1,8 @@
 package it.dindokey.testespresso.app;
 
 import android.app.Application;
+import it.dindokey.testespresso.app.api.ApiComponent;
+import it.dindokey.testespresso.app.api.ApiModule;
 
 
 /**

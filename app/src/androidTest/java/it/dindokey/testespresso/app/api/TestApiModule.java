@@ -1,8 +1,7 @@
-package it.dindokey.testespresso.app;
+package it.dindokey.testespresso.app.api;
 
 import dagger.Module;
 import dagger.Provides;
-import it.dindokey.testespresso.app.api.ProductsApi;
 import org.mockito.Mockito;
 
 import javax.inject.Singleton;

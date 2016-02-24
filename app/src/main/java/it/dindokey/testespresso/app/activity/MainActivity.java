@@ -1,4 +1,4 @@
-package it.dindokey.testespresso.app;
+package it.dindokey.testespresso.app.activity;
 
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import it.dindokey.testespresso.app.MyApplication;
+import it.dindokey.testespresso.app.R;
 import it.dindokey.testespresso.app.api.ProductsApi;
 
 import javax.inject.Inject;

@@ -1,6 +1,7 @@
-package it.dindokey.testespresso.app;
+package it.dindokey.testespresso.app.api;
 
 import dagger.Component;
+import it.dindokey.testespresso.app.activity.MainActivity;
 
 import javax.inject.Singleton;
 

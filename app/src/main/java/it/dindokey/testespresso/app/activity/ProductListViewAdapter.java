@@ -1,4 +1,4 @@
-package it.dindokey.testespresso.app;
+package it.dindokey.testespresso.app.activity;
 
 import android.content.Context;
 import android.widget.ArrayAdapter;
