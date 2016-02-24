@@ -26,7 +26,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "it.dindokey.testespresso.app.MockTestRunner"
     }
 
     compileOptions {
@@ -62,4 +62,8 @@ dependencies {
     androidTestCompile 'org.mockito:mockito-core:1.+'
     androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
+
+    androidTestApt 'com.google.dagger:dagger-compiler:2.0.2'
+    androidTestCompile 'com.google.dagger:dagger:2.0.2'
+    androidTestProvided 'org.glassfish:javax.annotation:10.0-b28'
 }

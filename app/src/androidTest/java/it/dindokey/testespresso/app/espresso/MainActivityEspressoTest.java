@@ -7,15 +7,17 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 import it.dindokey.testespresso.app.MainActivity;
-import it.dindokey.testespresso.app.MyApplication;
+import it.dindokey.testespresso.app.MyApplicationTest;
 import it.dindokey.testespresso.app.R;
+import it.dindokey.testespresso.app.TestApiComponent;
 import it.dindokey.testespresso.app.api.ProductsApi;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+
+import javax.inject.Inject;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -34,7 +36,7 @@ import static org.mockito.Mockito.when;
 @LargeTest
 public class MainActivityEspressoTest
 {
-    @Mock
+    @Inject
     ProductsApi mockedProductsApi;
 
     @Rule
@@ -43,7 +45,11 @@ public class MainActivityEspressoTest
     @Before
     public void setup()
     {
-        MockitoAnnotations.initMocks(this);
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        MyApplicationTest app
+                = (MyApplicationTest) instrumentation.getTargetContext().getApplicationContext();
+        TestApiComponent apiComponent = (TestApiComponent) app.apiComponent();
+        apiComponent.inject(this);
     }
 
     @Test
@@ -53,6 +59,7 @@ public class MainActivityEspressoTest
         onView(withText("Hello world!")).check(matches(isDisplayed()));
     }
 
+    @Ignore
     @Test
     public void espressoTestIsSyncWithAsyncTask() throws Exception
     {
@@ -66,7 +73,7 @@ public class MainActivityEspressoTest
     }
 
     @Test
-    public void getProducts() throws Exception
+    public void show_product_list() throws Exception
     {
         when(mockedProductsApi.getProducts()).thenReturn(new String[]{"test product"});
 
