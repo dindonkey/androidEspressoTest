@@ -1,7 +1,7 @@
 package it.dindokey.testespresso.app.api;
 
 import dagger.Component;
-import it.dindokey.testespresso.app.activity.MainActivity;
+import it.dindokey.testespresso.app.MainPresenter;
 
 import javax.inject.Singleton;
 
@@ -12,5 +12,5 @@ import javax.inject.Singleton;
 @Component(modules = ApiModule.class)
 public interface ApiComponent
 {
-    void inject(MainActivity activity);
+    void inject(MainPresenter presenter);
 }

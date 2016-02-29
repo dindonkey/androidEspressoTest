@@ -7,7 +7,7 @@ import it.dindokey.testespresso.app.api.TestApiModule;
 /**
  * Created by simone on 2/23/16.
  */
-public class MyApplicationTest extends MyApplication
+public class AppTest extends App
 {
     @Override
     protected ApiComponent createApiComponent()

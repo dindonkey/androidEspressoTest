@@ -1,23 +1,17 @@
 package it.dindokey.testespresso.app.activity;
 
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import it.dindokey.testespresso.app.App;
+import it.dindokey.testespresso.app.MainPresenter;
 import it.dindokey.testespresso.app.MainView;
-import it.dindokey.testespresso.app.MyApplication;
 import it.dindokey.testespresso.app.R;
-import it.dindokey.testespresso.app.api.ProductsApi;
-
-import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity implements MainView
 {
-
-    @Inject
-    public ProductsApi productsApi;
 
     private ProductListViewAdapter productListViewAdapter;
 
@@ -25,30 +19,17 @@ public class MainActivity extends AppCompatActivity implements MainView
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        ((MyApplication) getApplication()).apiComponent().inject(this);
-
         setContentView(R.layout.activity_main);
+
+        MainPresenter presenter = new MainPresenter((App)getApplication(),this);
+
         ListView listView = (ListView) findViewById(R.id.list_view);
 
         productListViewAdapter = new ProductListViewAdapter(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1);
         listView.setAdapter(productListViewAdapter);
 
-        new AsyncTask<Void, Void, String[]>()
-        {
-            @Override
-            protected void onPostExecute(String[] result)
-            {
-                refreshProductList(result);
-            }
-
-            @Override
-            protected String[] doInBackground(Void... params)
-            {
-                return productsApi.getProducts();
-            }
-        }.execute();
-
+        presenter.onStart();
     }
 
     @Override

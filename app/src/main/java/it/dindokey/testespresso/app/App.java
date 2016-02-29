@@ -9,7 +9,7 @@ import it.dindokey.testespresso.app.api.DaggerApiComponent;
 /**
  * Created by simone on 2/9/16.
  */
-public class MyApplication extends Application
+public class App extends Application
 {
     private final ApiComponent apiComponent = createApiComponent();
 
