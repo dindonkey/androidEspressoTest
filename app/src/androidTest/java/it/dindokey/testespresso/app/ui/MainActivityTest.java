@@ -1,4 +1,4 @@
-package it.dindokey.testespresso.app.espresso;
+package it.dindokey.testespresso.app.ui;
 
 import android.app.Instrumentation;
 import android.content.Intent;
@@ -7,7 +7,6 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 import it.dindokey.testespresso.app.AppTest;
-import it.dindokey.testespresso.app.activity.MainActivity;
 import it.dindokey.testespresso.app.api.ProductsApi;
 import it.dindokey.testespresso.app.api.TestApiComponent;
 import org.junit.Before;
