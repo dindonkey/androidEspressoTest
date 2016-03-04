@@ -9,6 +9,8 @@ import org.junit.Test;
 
 import javax.inject.Inject;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -19,7 +21,6 @@ public class MainPresenterTest
     @Inject
     ProductsApi mockedProductsApi; //Dagger cannot inject private field
 
-//    @Inject
     MainView mockedMainView;
 
     private MainPresenter presenter;
@@ -27,19 +28,22 @@ public class MainPresenterTest
     @Before
     public void setup()
     {
+
         Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         AppTest app
                 = (AppTest) instrumentation.getTargetContext().getApplicationContext();
         TestApiComponent apiComponent = (TestApiComponent) app.apiComponent();
         apiComponent.inject(this);
 
+        mockedMainView = mock(MainView.class);
         presenter = new MainPresenter(app, mockedMainView);
     }
 
     @Test
     public void load_products_on_start() throws Exception
     {
-       presenter.onStart();
-       verify(mockedProductsApi).getProducts();
+        presenter.onStart();
+        verify(mockedProductsApi).getProducts();
+        verify(mockedMainView).refreshProductList(any(String[].class));
     }
 }

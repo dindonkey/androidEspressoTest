@@ -10,7 +10,6 @@ import javax.inject.Inject;
  */
 public class MainPresenter
 {
-//    @Inject
     private MainView view;
 
     @Inject

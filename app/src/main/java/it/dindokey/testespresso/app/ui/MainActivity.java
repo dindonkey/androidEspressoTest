@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements MainView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MainPresenter presenter = new MainPresenter((App)getApplication(),this);
+        MainPresenter presenter = new MainPresenter((App)getApplication(), this);
 
         ListView listView = (ListView) findViewById(R.id.list_view);
 
