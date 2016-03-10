@@ -4,6 +4,8 @@ import android.app.Instrumentation;
 import android.support.test.InstrumentationRegistry;
 import it.dindokey.testespresso.app.api.ProductsApi;
 import it.dindokey.testespresso.app.api.TestApiComponent;
+import rx.schedulers.Schedulers;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,7 +38,8 @@ public class MainPresenterTest
         apiComponent.inject(this);
 
         mockedMainView = mock(MainView.class);
-        presenter = new MainPresenter(app, mockedMainView);
+        SchedulerManager schedulerManager = new SchedulerManager(Schedulers.immediate(),Schedulers.immediate());
+        presenter = new MainPresenter(app, mockedMainView, schedulerManager);
     }
 
     @Test

@@ -15,13 +15,15 @@ import rx.schedulers.Schedulers;
 public class MainPresenter
 {
     private MainView view;
+    private SchedulerManager schedulerManager;
 
     @Inject
     public ProductsApi productsApi;
 
-    public MainPresenter(App app, MainView view)
+    public MainPresenter(App app, MainView view, SchedulerManager schedulerManager)
     {
         this.view = view;
+        this.schedulerManager = schedulerManager;
         app.apiComponent().inject(this);
     }
 
@@ -62,8 +64,8 @@ public class MainPresenter
         });
 
         productsObservable
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(schedulerManager.io())
+                .observeOn(schedulerManager.mainThread())
                 .subscribe(new Observer<String[]>()
                 {
                     @Override

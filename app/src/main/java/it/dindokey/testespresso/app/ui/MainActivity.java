@@ -9,6 +9,9 @@ import it.dindokey.testespresso.app.App;
 import it.dindokey.testespresso.app.MainPresenter;
 import it.dindokey.testespresso.app.MainView;
 import it.dindokey.testespresso.app.R;
+import it.dindokey.testespresso.app.SchedulerManager;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements MainView
 {
@@ -21,7 +24,8 @@ public class MainActivity extends AppCompatActivity implements MainView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MainPresenter presenter = new MainPresenter((App)getApplication(), this);
+        SchedulerManager schedulerManager = new SchedulerManager(Schedulers.io(), AndroidSchedulers.mainThread());
+        MainPresenter presenter = new MainPresenter((App)getApplication(), this, schedulerManager);
 
         ListView listView = (ListView) findViewById(R.id.list_view);
 
