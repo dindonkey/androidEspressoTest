@@ -1,15 +1,10 @@
 package it.dindokey.testespresso.app;
 
-import android.app.Instrumentation;
-import android.support.test.InstrumentationRegistry;
-import it.dindokey.testespresso.app.api.ProductsApi;
-import it.dindokey.testespresso.app.api.TestApiComponent;
-import rx.schedulers.Schedulers;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.inject.Inject;
+import it.dindokey.testespresso.app.api.ProductsApi;
+import rx.schedulers.Schedulers;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -20,8 +15,7 @@ import static org.mockito.Mockito.verify;
  */
 public class MainPresenterTest
 {
-    @Inject
-    ProductsApi mockedProductsApi; //Dagger cannot inject private field
+    ProductsApi mockedProductsApi;
 
     MainView mockedMainView;
 
@@ -31,21 +25,16 @@ public class MainPresenterTest
     public void setup()
     {
 
-        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-        AppTest app
-                = (AppTest) instrumentation.getTargetContext().getApplicationContext();
-        TestApiComponent apiComponent = (TestApiComponent) app.apiComponent();
-        apiComponent.inject(this);
-
         mockedMainView = mock(MainView.class);
+        mockedProductsApi = mock(ProductsApi.class);
         SchedulerManager schedulerManager = new SchedulerManager(Schedulers.immediate(),Schedulers.immediate());
-        presenter = new MainPresenter(app, mockedMainView, schedulerManager);
+        presenter = new MainPresenter(mockedProductsApi, schedulerManager);
     }
 
     @Test
     public void load_products_on_start() throws Exception
     {
-        presenter.onStart();
+        presenter.resume(mockedMainView);
         verify(mockedProductsApi).getProducts();
         verify(mockedMainView).refreshProductList(any(String[].class));
     }

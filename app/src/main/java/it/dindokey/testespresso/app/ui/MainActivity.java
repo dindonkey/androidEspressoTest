@@ -5,18 +5,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+
+import javax.inject.Inject;
+
 import it.dindokey.testespresso.app.App;
 import it.dindokey.testespresso.app.MainPresenter;
 import it.dindokey.testespresso.app.MainView;
 import it.dindokey.testespresso.app.R;
-import it.dindokey.testespresso.app.SchedulerManager;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements MainView
 {
-
     private ProductListViewAdapter productListViewAdapter;
+
+    @Inject MainPresenter mainPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -24,16 +25,14 @@ public class MainActivity extends AppCompatActivity implements MainView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SchedulerManager schedulerManager = new SchedulerManager(Schedulers.io(), AndroidSchedulers.mainThread());
-        MainPresenter presenter = new MainPresenter((App)getApplication(), this, schedulerManager);
-
         ListView listView = (ListView) findViewById(R.id.list_view);
 
         productListViewAdapter = new ProductListViewAdapter(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1);
         listView.setAdapter(productListViewAdapter);
 
-        presenter.onStart();
+        ((App)getApplication()).getComponent().inject(this);
+        mainPresenter.resume(this);
     }
 
     @Override

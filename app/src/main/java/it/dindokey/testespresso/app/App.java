@@ -1,9 +1,6 @@
 package it.dindokey.testespresso.app;
 
 import android.app.Application;
-import it.dindokey.testespresso.app.api.ApiComponent;
-import it.dindokey.testespresso.app.api.ApiModule;
-import it.dindokey.testespresso.app.api.DaggerApiComponent;
 
 
 /**
@@ -11,18 +8,17 @@ import it.dindokey.testespresso.app.api.DaggerApiComponent;
  */
 public class App extends Application
 {
-    private final ApiComponent apiComponent = createApiComponent();
+    private AppComponent component;
 
-    protected ApiComponent createApiComponent()
-    {
-        return DaggerApiComponent.builder()
-                .apiModule(new ApiModule())
+    @Override public void onCreate() {
+        super.onCreate();
+        component = DaggerAppComponent.builder()
+                .appModule(new AppModule())
                 .build();
     }
 
-    public ApiComponent apiComponent()
-    {
-        return apiComponent;
+    public AppComponent getComponent() {
+        return component;
     }
 
 }

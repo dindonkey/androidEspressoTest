@@ -6,28 +6,23 @@ import it.dindokey.testespresso.app.api.ProductsApi;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by simone on 2/24/16.
  */
 public class MainPresenter
 {
-    private MainView view;
     private SchedulerManager schedulerManager;
 
-    @Inject
     public ProductsApi productsApi;
 
-    public MainPresenter(App app, MainView view, SchedulerManager schedulerManager)
+    @Inject public MainPresenter(ProductsApi productsApi, SchedulerManager schedulerManager)
     {
-        this.view = view;
+        this.productsApi = productsApi;
         this.schedulerManager = schedulerManager;
-        app.apiComponent().inject(this);
     }
 
-    public void onStart()
+    public void resume(final MainView view)
     {
 //        new AsyncTask<Void, Void, String[]>()
 //        {
