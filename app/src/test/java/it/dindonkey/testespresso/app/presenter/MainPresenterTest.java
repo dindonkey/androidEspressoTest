@@ -1,4 +1,4 @@
-package it.dindonkey.testespresso.app;
+package it.dindonkey.testespresso.app.presenter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -8,8 +8,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import it.dindokey.testespresso.app.MainPresenter;
-import it.dindokey.testespresso.app.MainView;
+import it.dindokey.testespresso.app.presenter.MainPresenter;
+import it.dindokey.testespresso.app.view.MainView;
 import it.dindokey.testespresso.app.SchedulerManager;
 import it.dindokey.testespresso.app.api.ProductsApi;
 import rx.schedulers.Schedulers;

@@ -3,7 +3,7 @@ package it.dindokey.testespresso.app;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import it.dindokey.testespresso.app.ui.MainActivity;
+import it.dindokey.testespresso.app.view.MainActivity;
 
 /**
  * Created by simone on 3/10/16.

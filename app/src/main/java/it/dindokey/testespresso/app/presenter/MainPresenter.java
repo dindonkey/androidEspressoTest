@@ -1,8 +1,10 @@
-package it.dindokey.testespresso.app;
+package it.dindokey.testespresso.app.presenter;
 
 import javax.inject.Inject;
 
+import it.dindokey.testespresso.app.SchedulerManager;
 import it.dindokey.testespresso.app.api.ProductsApi;
+import it.dindokey.testespresso.app.view.MainView;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;

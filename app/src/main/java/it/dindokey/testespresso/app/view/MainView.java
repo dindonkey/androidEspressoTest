@@ -1,4 +1,4 @@
-package it.dindokey.testespresso.app;
+package it.dindokey.testespresso.app.view;
 
 /**
  * Created by simone on 2/24/16.

@@ -1,4 +1,4 @@
-package it.dindokey.testespresso.app.ui;
+package it.dindokey.testespresso.app.view;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,8 +9,7 @@ import android.widget.ListView;
 import javax.inject.Inject;
 
 import it.dindokey.testespresso.app.App;
-import it.dindokey.testespresso.app.MainPresenter;
-import it.dindokey.testespresso.app.MainView;
+import it.dindokey.testespresso.app.presenter.MainPresenter;
 import it.dindokey.testespresso.app.R;
 
 public class MainActivity extends AppCompatActivity implements MainView
