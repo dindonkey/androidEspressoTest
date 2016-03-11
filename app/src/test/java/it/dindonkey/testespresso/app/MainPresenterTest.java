@@ -1,32 +1,34 @@
-package it.dindokey.testespresso.app;
+package it.dindonkey.testespresso.app;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Matchers;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import it.dindokey.testespresso.app.MainPresenter;
+import it.dindokey.testespresso.app.MainView;
+import it.dindokey.testespresso.app.SchedulerManager;
 import it.dindokey.testespresso.app.api.ProductsApi;
 import rx.schedulers.Schedulers;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 /**
  * Created by simone on 2/29/16.
  */
+@RunWith(MockitoJUnitRunner.class)
 public class MainPresenterTest
 {
-    ProductsApi mockedProductsApi;
+    @Mock ProductsApi mockedProductsApi;
 
-    MainView mockedMainView;
+    @Mock MainView mockedMainView;
 
     private MainPresenter presenter;
 
     @Before
     public void setup()
     {
-
-        mockedMainView = mock(MainView.class);
-        mockedProductsApi = mock(ProductsApi.class);
         SchedulerManager schedulerManager = new SchedulerManager(Schedulers.immediate(),Schedulers.immediate());
         presenter = new MainPresenter(mockedProductsApi, schedulerManager);
     }
@@ -35,7 +37,7 @@ public class MainPresenterTest
     public void load_products_on_start() throws Exception
     {
         presenter.resume(mockedMainView);
-        verify(mockedProductsApi).getProducts();
-        verify(mockedMainView).refreshProductList(any(String[].class));
+        Mockito.verify(mockedProductsApi).getProducts();
+        Mockito.verify(mockedMainView).refreshProductList(Matchers.any(String[].class));
     }
 }

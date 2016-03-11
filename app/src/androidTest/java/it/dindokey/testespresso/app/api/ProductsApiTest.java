@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by simone on 2/8/16.
  */
-public class TestProductsApi
+public class ProductsApiTest
 {
     @Test
     public void getProducts() throws Exception
