@@ -1,5 +1,7 @@
 package it.dindokey.testespresso.app;
 
+import org.mockito.Mockito;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -9,18 +11,18 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by simone on 3/10/16.
+ * Created by simone on 3/11/16.
  */
 @Module
-public class AppModule
+public class TestAppModule
 {
     @Provides @Singleton ProductsApi providesProductsApi()
     {
-        return new ProductsApi();
+        return Mockito.mock(ProductsApi.class);
     }
 
     @Provides @Singleton SchedulerManager providesSchedulerManager()
     {
-        return new SchedulerManager(Schedulers.io(), AndroidSchedulers.mainThread());
+        return new SchedulerManager(Schedulers.from(EspressoExecutor.getCachedThreadPool()), AndroidSchedulers.mainThread());
     }
 }

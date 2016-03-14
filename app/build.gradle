@@ -60,8 +60,15 @@ dependencies {
     androidTestCompile 'com.android.support.test:runner:0.4.1'
     androidTestCompile 'com.android.support:support-v4:23.1.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.1'
-    androidTestCompile 'org.mockito:mockito-all:1.9.5'
+
+    androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
+    androidTestCompile('com.google.dexmaker:dexmaker-mockito:1.2') {
+        exclude group: 'org.hamcrest', module: 'hamcrest-core'
+    }
+
+    androidTestApt 'com.google.dagger:dagger-compiler:2.0.2'
+
 
     testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-all:1.9.5'
+    testCompile 'org.mockito:mockito-core:1.9.5'
 }
