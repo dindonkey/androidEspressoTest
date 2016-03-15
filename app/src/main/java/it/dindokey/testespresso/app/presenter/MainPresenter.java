@@ -26,22 +26,6 @@ public class MainPresenter
 
     public void resume(final MainView view)
     {
-//        new AsyncTask<Void, Void, String[]>()
-//        {
-//            @Override
-//            protected void onPostExecute(String[] result)
-//            {
-//                view.refreshProductList(result);
-//            }
-//
-//            @Override
-//            protected String[] doInBackground(Void... params)
-//            {
-//                return productsApi.getProducts();
-//            }
-//        }.execute();
-
-
         Observable<String[]> productsObservable = Observable.create(new Observable.OnSubscribe<String[]>()
         {
             @Override
