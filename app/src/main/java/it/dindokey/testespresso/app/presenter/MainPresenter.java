@@ -6,8 +6,8 @@ import it.dindokey.testespresso.app.SchedulerManager;
 import it.dindokey.testespresso.app.api.ProductsApi;
 import it.dindokey.testespresso.app.view.MainView;
 import rx.Observable;
-import rx.Observer;
 import rx.Subscriber;
+import rx.functions.Action1;
 
 /**
  * Created by simone on 2/24/16.
@@ -47,25 +47,21 @@ public class MainPresenter
         productsObservable
                 .subscribeOn(schedulerManager.io())
                 .observeOn(schedulerManager.mainThread())
-                .subscribe(new Observer<String[]>()
+                .subscribe(new Action1<String[]>()
                 {
                     @Override
-                    public void onCompleted()
+                    public void call(String[] strings)  //success
                     {
-
+                        view.refreshProductList(strings);
                     }
-
+                }, new Action1<Throwable>()
+                {
                     @Override
-                    public void onError(Throwable e)
+                    public void call(Throwable throwable)   //error
                     {
-
-                    }
-
-                    @Override
-                    public void onNext(String[] products)
-                    {
-                        view.refreshProductList(products);
+                        //TODO: show error
                     }
                 });
+
     }
 }
