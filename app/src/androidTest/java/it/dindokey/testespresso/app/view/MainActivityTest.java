@@ -17,7 +17,7 @@ import it.dindokey.testespresso.app.App;
 import it.dindokey.testespresso.app.DaggerTestAppComponent;
 import it.dindokey.testespresso.app.TestAppComponent;
 import it.dindokey.testespresso.app.TestAppModule;
-import it.dindokey.testespresso.app.api.ProductsApi;
+import it.dindokey.testespresso.app.api.ProductsApiService;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -33,10 +33,9 @@ import static org.mockito.Mockito.when;
 @LargeTest
 public class MainActivityTest
 {
-    @Inject ProductsApi mockedProductsApi;
+    @Inject ProductsApiService mockedProductsApiService;
 
-    @Rule
-    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule(MainActivity.class,
+    @Rule public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule(MainActivity.class,
             true,
             false);
 
@@ -64,25 +63,11 @@ public class MainActivityTest
     @Test
     public void show_product_list() throws Exception
     {
-        when(mockedProductsApi.getProducts()).thenReturn(new String[]{"test product"});
+        when(mockedProductsApiService.getProducts()).thenReturn(new String[]{"test product"});
 
         mActivityRule.launchActivity(new Intent());
 
-        verify(mockedProductsApi).getProducts();
+        verify(mockedProductsApiService).getProducts();
         onView(withText("test product")).check(matches(isDisplayed()));
     }
-
-//    @Ignore
-//    @Test
-//    public void espressoTestIsSyncWithAsyncTask() throws Exception
-//    {
-//        mActivityRule.launchActivity(new Intent());
-//
-//        // first onView waits for async task termination
-//        onView(withId(R.id.list_view)).check(matches(isDisplayed()));
-//        onView(withText("Loading...")).check(doesNotExist());
-//        onView(withText("First product")).check(matches(isDisplayed()));
-//        onData(allOf(is("First product"))).check(matches(isDisplayed()));
-//    }
-
 }

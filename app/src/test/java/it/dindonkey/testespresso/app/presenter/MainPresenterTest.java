@@ -8,11 +8,15 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import it.dindokey.testespresso.app.api.ProductsApiService;
 import it.dindokey.testespresso.app.presenter.MainPresenter;
 import it.dindokey.testespresso.app.view.MainView;
 import it.dindokey.testespresso.app.SchedulerManager;
-import it.dindokey.testespresso.app.api.ProductsApi;
 import rx.schedulers.Schedulers;
+
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by simone on 2/29/16.
@@ -20,7 +24,7 @@ import rx.schedulers.Schedulers;
 @RunWith(MockitoJUnitRunner.class)
 public class MainPresenterTest
 {
-    @Mock ProductsApi mockedProductsApi;
+    @Mock ProductsApiService mockedProductsApiService;
 
     @Mock MainView mockedMainView;
 
@@ -30,14 +34,23 @@ public class MainPresenterTest
     public void setup()
     {
         SchedulerManager schedulerManager = new SchedulerManager(Schedulers.immediate(),Schedulers.immediate());
-        presenter = new MainPresenter(mockedProductsApi, schedulerManager);
+        presenter = new MainPresenter(mockedProductsApiService, schedulerManager);
     }
 
     @Test
     public void load_products_on_start() throws Exception
     {
         presenter.resume(mockedMainView);
-        Mockito.verify(mockedProductsApi).getProducts();
-        Mockito.verify(mockedMainView).refreshProductList(Matchers.any(String[].class));
+        verify(mockedProductsApiService).getProducts();
+        verify(mockedMainView).refreshProductList(Matchers.any(String[].class));
+    }
+
+    @Test
+    public void retain_model_after_first_load() throws Exception
+    {
+        when(mockedProductsApiService.getProducts()).thenReturn(new String[]{"test product"});
+        presenter.resume(mockedMainView);
+        presenter.resume(mockedMainView);
+        verify(mockedProductsApiService, times(1)).getProducts();
     }
 }

@@ -6,7 +6,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import it.dindokey.testespresso.app.api.ProductsApi;
+import it.dindokey.testespresso.app.api.ProductsApiService;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -16,9 +16,9 @@ import rx.schedulers.Schedulers;
 @Module
 public class TestAppModule
 {
-    @Provides @Singleton ProductsApi providesProductsApi()
+    @Provides @Singleton ProductsApiService providesProductsApi()
     {
-        return Mockito.mock(ProductsApi.class);
+        return Mockito.mock(ProductsApiService.class);
     }
 
     @Provides @Singleton SchedulerManager providesSchedulerManager()
