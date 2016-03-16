@@ -1,6 +1,10 @@
 package it.dindokey.testespresso.app.view;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -23,6 +27,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -69,5 +74,30 @@ public class MainActivityTest
 
         verify(mockedProductsApiService).getProducts();
         onView(withText("test product")).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void retain_products_on_rotation() throws Exception
+    {
+        when(mockedProductsApiService.getProducts()).thenReturn(new String[]{"test product"});
+
+        mActivityRule.launchActivity(new Intent());
+        onView(withText("test product")).check(matches(isDisplayed()));
+        rotateScreen();
+        onView(withText("test product")).check(matches(isDisplayed()));
+
+        verify(mockedProductsApiService, times(1)).getProducts();
+    }
+
+    private void rotateScreen() {
+        Context context = InstrumentationRegistry.getTargetContext();
+        int orientation
+                = context.getResources().getConfiguration().orientation;
+
+        Activity activity = mActivityRule.getActivity();
+        activity.setRequestedOrientation(
+                (orientation == Configuration.ORIENTATION_PORTRAIT) ?
+                        ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE :
+                        ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 }

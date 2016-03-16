@@ -29,12 +29,16 @@ public class MainPresenterTest
     @Mock MainView mockedMainView;
 
     private MainPresenter presenter;
+    private String[] sampleProducts;
 
     @Before
     public void setup()
     {
         SchedulerManager schedulerManager = new SchedulerManager(Schedulers.immediate(),Schedulers.immediate());
         presenter = new MainPresenter(mockedProductsApiService, schedulerManager);
+
+        sampleProducts = new String[]{"test product"};
+        when(mockedProductsApiService.getProducts()).thenReturn(sampleProducts);
     }
 
     @Test
@@ -42,13 +46,12 @@ public class MainPresenterTest
     {
         presenter.resume(mockedMainView);
         verify(mockedProductsApiService).getProducts();
-        verify(mockedMainView).refreshProductList(Matchers.any(String[].class));
+        verify(mockedMainView).refreshProductList(sampleProducts);
     }
 
     @Test
     public void retain_model_after_first_load() throws Exception
     {
-        when(mockedProductsApiService.getProducts()).thenReturn(new String[]{"test product"});
         presenter.resume(mockedMainView);
         presenter.resume(mockedMainView);
         verify(mockedProductsApiService, times(1)).getProducts();
