@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import it.dindokey.testespresso.app.SchedulerManager;
 import it.dindokey.testespresso.app.api.ProductsApiService;
+import it.dindokey.testespresso.app.model.ProductsModel;
 import it.dindokey.testespresso.app.view.MainView;
 import rx.Observable;
 import rx.Subscriber;
@@ -19,7 +20,7 @@ public class MainPresenter
     private SchedulerManager schedulerManager;
 
     private ProductsApiService productsApiService;
-    private String[] productsModel;
+    private ProductsModel productsModel;
 
     @Inject
     public MainPresenter(ProductsApiService productsApiService, SchedulerManager schedulerManager)
@@ -32,13 +33,17 @@ public class MainPresenter
     {
         if(null == productsModel)
         {
+            productsModel = new ProductsModel();
+        }
+        if(productsModel.getItems().length == 0)
+        {
             getProductsApiServiceObservable()
                     .subscribe(new Action1<String[]>()
                     {
                         @Override
                         public void call(String[] strings)  //success
                         {
-                            productsModel = strings;
+                            productsModel.setItems(strings);
                             view.refreshProductList(strings);
                         }
                     }, new Action1<Throwable>()
