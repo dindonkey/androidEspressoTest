@@ -1,7 +1,5 @@
 package it.dindokey.testespresso.app.presenter;
 
-import android.support.annotation.NonNull;
-
 import javax.inject.Inject;
 
 import it.dindokey.testespresso.app.SchedulerManager;
@@ -37,7 +35,24 @@ public class MainPresenter
         }
         if(productsModel.getItems().length == 0)
         {
-            getProductsApiServiceObservable()
+            Observable<String[]> productsObservable = Observable.create(new Observable.OnSubscribe<String[]>()
+            {
+                @Override
+                public void call(Subscriber<? super String[]> subscriber)
+                {
+                    try
+                    {
+                        subscriber.onNext(productsApiService.getProducts());
+                    } catch (Exception e)
+                    {
+                        subscriber.onError(e);
+                    }
+                }
+            });
+
+            productsObservable
+                    .subscribeOn(schedulerManager.io())
+                    .observeOn(schedulerManager.mainThread())
                     .subscribe(new Action1<String[]>()
                     {
                         @Override
@@ -58,27 +73,4 @@ public class MainPresenter
 
     }
 
-    @NonNull
-    private Observable<String[]> getProductsApiServiceObservable()
-    {
-        Observable<String[]> productsObservable = Observable.create(new Observable.OnSubscribe<String[]>()
-        {
-            @Override
-            public void call(Subscriber<? super String[]> subscriber)
-            {
-                try
-                {
-                    subscriber.onNext(productsApiService.getProducts());
-                } catch (Exception e)
-                {
-                    subscriber.onError(e);
-                }
-            }
-        });
-
-        productsObservable
-                .subscribeOn(schedulerManager.io())
-                .observeOn(schedulerManager.mainThread());
-        return productsObservable;
-    }
 }
