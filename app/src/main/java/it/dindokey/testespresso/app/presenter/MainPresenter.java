@@ -1,5 +1,7 @@
 package it.dindokey.testespresso.app.presenter;
 
+import android.os.Bundle;
+
 import javax.inject.Inject;
 
 import it.dindokey.testespresso.app.SchedulerManager;
@@ -15,10 +17,12 @@ import rx.functions.Action1;
  */
 public class MainPresenter
 {
+    public static final String MODEL = "model";
     private SchedulerManager schedulerManager;
 
     private ProductsApiService productsApiService;
-    private ProductsModel productsModel;
+
+    ProductsModel productsModel;
 
     @Inject
     public MainPresenter(ProductsApiService productsApiService, SchedulerManager schedulerManager)
@@ -73,4 +77,8 @@ public class MainPresenter
 
     }
 
+    public void saveInstanceState(Bundle outState)
+    {
+        outState.putParcelable(MODEL,productsModel);
+    }
 }
