@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements MainView
         listView.setAdapter(productListViewAdapter);
 
         ((App)getApplication()).getComponent().inject(this);
-        mainPresenter.resume(this);
+        mainPresenter.resume(this, savedInstanceState);
     }
 
     @Override
@@ -39,6 +39,12 @@ public class MainActivity extends AppCompatActivity implements MainView
     {
         productListViewAdapter.setValues(products);
         productListViewAdapter.reload();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        mainPresenter.saveInstanceState(outState);
     }
 
     @Override

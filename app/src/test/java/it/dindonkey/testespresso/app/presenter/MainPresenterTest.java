@@ -1,19 +1,22 @@
 package it.dindonkey.testespresso.app.presenter;
 
+import android.os.Bundle;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import it.dindokey.testespresso.app.SchedulerManager;
 import it.dindokey.testespresso.app.api.ProductsApiService;
+import it.dindokey.testespresso.app.model.ProductsModel;
 import it.dindokey.testespresso.app.presenter.MainPresenter;
 import it.dindokey.testespresso.app.view.MainView;
-import it.dindokey.testespresso.app.SchedulerManager;
 import rx.schedulers.Schedulers;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -27,6 +30,8 @@ public class MainPresenterTest
     @Mock ProductsApiService mockedProductsApiService;
 
     @Mock MainView mockedMainView;
+
+    @Mock Bundle savedInstanceStateMock;
 
     private MainPresenter presenter;
     private String[] sampleProducts;
@@ -44,7 +49,7 @@ public class MainPresenterTest
     @Test
     public void load_products_on_start() throws Exception
     {
-        presenter.resume(mockedMainView);
+        presenter.resume(mockedMainView, savedInstanceStateMock);
         verify(mockedProductsApiService).getProducts();
         verify(mockedMainView).refreshProductList(sampleProducts);
     }
@@ -52,8 +57,20 @@ public class MainPresenterTest
     @Test
     public void retain_model_after_first_load() throws Exception
     {
-        presenter.resume(mockedMainView);
-        presenter.resume(mockedMainView);
+        presenter.resume(mockedMainView, savedInstanceStateMock);
+        presenter.resume(mockedMainView, savedInstanceStateMock);
         verify(mockedProductsApiService, times(1)).getProducts();
+    }
+
+    @Test
+    public void load_model_from_saved_instance_state() throws Exception
+    {
+        ProductsModel model = new ProductsModel();
+        model.setItems(sampleProducts);
+
+        when(savedInstanceStateMock.getParcelable(anyString())).thenReturn(model);
+        presenter.resume(mockedMainView, savedInstanceStateMock);
+
+        assertEquals(model,presenter.getProductsModel());
     }
 }

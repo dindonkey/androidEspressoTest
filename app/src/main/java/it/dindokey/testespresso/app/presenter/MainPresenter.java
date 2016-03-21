@@ -31,8 +31,12 @@ public class MainPresenter
         this.schedulerManager = schedulerManager;
     }
 
-    public void resume(final MainView view)
+    public void resume(final MainView view, Bundle savedInstanceState)
     {
+        if(null != savedInstanceState)
+        {
+            productsModel = savedInstanceState.getParcelable(MODEL);
+        }
         if(null == productsModel)
         {
             productsModel = new ProductsModel();
@@ -80,6 +84,11 @@ public class MainPresenter
     public void saveInstanceState(Bundle outState)
     {
         outState.putParcelable(MODEL,productsModel);
+    }
+
+    public ProductsModel getProductsModel()
+    {
+        return productsModel;
     }
 
     public void setProductsModel(ProductsModel productsModel)
