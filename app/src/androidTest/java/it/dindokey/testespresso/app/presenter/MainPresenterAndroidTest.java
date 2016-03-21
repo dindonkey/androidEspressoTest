@@ -26,7 +26,7 @@ public class MainPresenterAndroidTest
 
         ProductsModel testModel = new ProductsModel();
         testModel.setItems(new String[]{"test product"});
-        presenter.productsModel = testModel;
+        presenter.setProductsModel(testModel);
 
         Bundle outState = new Bundle();
         presenter.saveInstanceState(outState);

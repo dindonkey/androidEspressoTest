@@ -22,7 +22,7 @@ public class MainPresenter
 
     private ProductsApiService productsApiService;
 
-    ProductsModel productsModel;
+    private ProductsModel productsModel;
 
     @Inject
     public MainPresenter(ProductsApiService productsApiService, SchedulerManager schedulerManager)
@@ -80,5 +80,10 @@ public class MainPresenter
     public void saveInstanceState(Bundle outState)
     {
         outState.putParcelable(MODEL,productsModel);
+    }
+
+    public void setProductsModel(ProductsModel productsModel)
+    {
+        this.productsModel = productsModel;
     }
 }
