@@ -63,7 +63,7 @@ public class MainPresenterTest
     }
 
     @Test
-    public void load_model_from_saved_instance_state() throws Exception
+    public void load_model_from_saved_instance_state_and_update_view() throws Exception
     {
         ProductsModel model = new ProductsModel();
         model.setItems(sampleProducts);
@@ -71,6 +71,7 @@ public class MainPresenterTest
         when(savedInstanceStateMock.getParcelable(anyString())).thenReturn(model);
         presenter.resume(mockedMainView, savedInstanceStateMock);
 
-        assertEquals(model,presenter.getProductsModel());
+        assertEquals(model, presenter.getProductsModel());
+        verify(mockedMainView).refreshProductList(sampleProducts);
     }
 }

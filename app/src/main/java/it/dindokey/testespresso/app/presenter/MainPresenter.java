@@ -79,6 +79,8 @@ public class MainPresenter
                     });
         }
 
+        view.refreshProductList(productsModel.getItems());
+
     }
 
     public void saveInstanceState(Bundle outState)
