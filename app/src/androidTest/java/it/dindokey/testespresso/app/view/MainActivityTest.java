@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -99,5 +100,21 @@ public class MainActivityTest
                 (orientation == Configuration.ORIENTATION_PORTRAIT) ?
                         ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE :
                         ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+    @Test
+    public void refresh_list_from_model() throws Exception
+    {
+        mActivityRule.launchActivity(new Intent());
+        mActivityRule.getActivity().runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                mActivityRule.getActivity().refreshProductList(new String[]{"test product"});
+            }
+        });
+
+        onView(withText("test product")).check(matches(isDisplayed()));
     }
 }
