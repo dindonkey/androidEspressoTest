@@ -75,6 +75,8 @@ public class MainPresenter
                             //TODO: show error
                         }
                     });
+
+            view.showLoading();
         }
     }
 

@@ -75,4 +75,11 @@ public class MainPresenterTest
         assertEquals(model, presenter.getProductsModel());
         verify(mockedMainView).refreshProductList(sampleProducts);
     }
+
+    @Test
+    public void call_show_loading_while_fetching_data() throws Exception
+    {
+        presenter.resume(mockedMainView,savedInstanceStateMock);
+        verify(mockedMainView).showLoading();
+    }
 }

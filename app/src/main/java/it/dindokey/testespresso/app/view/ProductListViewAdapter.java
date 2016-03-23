@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
  */
 public class ProductListViewAdapter extends ArrayAdapter<String>
 {
-    private String[] values = new String[]{"Loading..."};
+    private String[] values = new String[]{};
 
     public ProductListViewAdapter(Context context, int resource, int textViewResourceId)
     {
