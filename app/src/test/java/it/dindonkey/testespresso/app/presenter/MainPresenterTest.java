@@ -48,7 +48,7 @@ public class MainPresenterTest
     }
 
     @Test
-    public void load_products_on_start() throws Exception
+    public void load_products_on_resume() throws Exception
     {
         presenter.resume(mockedMainView, savedInstanceStateMock);
         verify(mockedProductsApiService).getProducts();

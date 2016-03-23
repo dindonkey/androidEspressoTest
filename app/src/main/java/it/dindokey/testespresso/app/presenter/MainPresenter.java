@@ -36,13 +36,11 @@ public class MainPresenter
         if(null != savedInstanceState && null != savedInstanceState.getParcelable(MODEL))
         {
             productsModel = savedInstanceState.getParcelable(MODEL);
+            view.refreshProductList(productsModel.getItems());
         }
         if(null == productsModel)
         {
             productsModel = new ProductsModel();
-        }
-        if(productsModel.getItems().length == 0)
-        {
             Observable<String[]> productsObservable = Observable.create(new Observable.OnSubscribe<String[]>()
             {
                 @Override
@@ -78,9 +76,6 @@ public class MainPresenter
                         }
                     });
         }
-
-        view.refreshProductList(productsModel.getItems());
-
     }
 
     public void saveInstanceState(Bundle outState)
