@@ -72,7 +72,7 @@ public class MainPresenter
                         @Override
                         public void call(Throwable throwable)   //error
                         {
-                            //TODO: show error
+                            view.showError();
                         }
                     });
 

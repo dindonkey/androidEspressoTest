@@ -134,4 +134,29 @@ public class MainActivityTest
 
         onView(withText("loading")).check(matches(isDisplayed()));
     }
+
+    @Test
+    public void show_load_error_message() throws Exception
+    {
+        mActivityRule.launchActivity(new Intent());
+        mActivityRule.getActivity().runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                mActivityRule.getActivity().showError();
+            }
+
+        });
+
+        onView(withText("error")).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void show_load_error_if_occours() throws Exception
+    {
+        when(mockedProductsApiService.getProducts()).thenThrow(new RuntimeException());
+        mActivityRule.launchActivity(new Intent());
+        onView(withText("error")).check(matches(isDisplayed()));
+    }
 }

@@ -82,4 +82,13 @@ public class MainPresenterTest
         presenter.resume(mockedMainView,savedInstanceStateMock);
         verify(mockedMainView).showLoading();
     }
+
+    @Test
+    public void call_show_error_if_occours() throws Exception
+    {
+        when(mockedProductsApiService.getProducts()).thenThrow(new RuntimeException());
+        presenter.resume(mockedMainView,savedInstanceStateMock);
+        verify(mockedMainView).showError();
+
+    }
 }

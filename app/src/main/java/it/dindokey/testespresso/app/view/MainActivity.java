@@ -44,7 +44,14 @@ public class MainActivity extends AppCompatActivity implements MainView
     @Override
     public void showLoading()
     {
-        productListViewAdapter.setValues(new String[]{getString(R.string.loading)});
+        productListViewAdapter.setValues(new String[]{getString(R.string.loading_message)});
+        productListViewAdapter.reload();
+    }
+
+    @Override
+    public void showError()
+    {
+        productListViewAdapter.setValues(new String[]{getString(R.string.error_message)});
         productListViewAdapter.reload();
     }
 
