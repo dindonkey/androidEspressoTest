@@ -33,7 +33,7 @@ public class MainPresenter
 
     public void resume(final MainView view, Bundle savedInstanceState)
     {
-        if(null != savedInstanceState)
+        if(null != savedInstanceState && null != savedInstanceState.getParcelable(MODEL))
         {
             productsModel = savedInstanceState.getParcelable(MODEL);
         }
