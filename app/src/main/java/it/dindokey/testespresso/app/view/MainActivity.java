@@ -42,6 +42,13 @@ public class MainActivity extends AppCompatActivity implements MainView
     }
 
     @Override
+    public void showLoading()
+    {
+        productListViewAdapter.setValues(new String[]{getString(R.string.loading)});
+        productListViewAdapter.reload();
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState)
     {
         mainPresenter.saveInstanceState(outState);

@@ -103,7 +103,7 @@ public class MainActivityTest
     }
 
     @Test
-    public void refresh_list_from_model() throws Exception
+    public void refresh_product_list() throws Exception
     {
         mActivityRule.launchActivity(new Intent());
         mActivityRule.getActivity().runOnUiThread(new Runnable()
@@ -116,5 +116,22 @@ public class MainActivityTest
         });
 
         onView(withText("test product")).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void show_loading_message() throws Exception
+    {
+        mActivityRule.launchActivity(new Intent());
+        mActivityRule.getActivity().runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                mActivityRule.getActivity().showLoading();
+            }
+
+        });
+
+        onView(withText("loading")).check(matches(isDisplayed()));
     }
 }

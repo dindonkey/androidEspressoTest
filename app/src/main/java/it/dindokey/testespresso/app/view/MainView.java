@@ -6,4 +6,6 @@ package it.dindokey.testespresso.app.view;
 public interface MainView
 {
     void refreshProductList(String[] products);
+
+    void showLoading();
 }
