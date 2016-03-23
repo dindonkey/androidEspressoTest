@@ -52,7 +52,7 @@ public class MainPresenterTest
     {
         presenter.resume(mockedMainView, savedInstanceStateMock);
         verify(mockedProductsApiService).getProducts();
-        verify(mockedMainView, atLeastOnce()).refreshProductList(sampleProducts);
+        verify(mockedMainView).refreshProductList(sampleProducts);
     }
 
     @Test
