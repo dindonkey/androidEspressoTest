@@ -1,9 +1,8 @@
 package it.dindokey.testespresso.app.presenter;
 
-import android.os.Bundle;
-
 import javax.inject.Inject;
 
+import it.dindokey.testespresso.app.ModelViewHolder;
 import it.dindokey.testespresso.app.SchedulerManager;
 import it.dindokey.testespresso.app.api.ProductsApiService;
 import it.dindokey.testespresso.app.model.ProductsModel;
@@ -17,12 +16,9 @@ import rx.functions.Action1;
  */
 public class MainPresenter
 {
-    public static final String MODEL = "model";
     private SchedulerManager schedulerManager;
 
     private ProductsApiService productsApiService;
-
-    private ProductsModel productsModel;
 
     @Inject
     public MainPresenter(ProductsApiService productsApiService, SchedulerManager schedulerManager)
@@ -31,16 +27,18 @@ public class MainPresenter
         this.schedulerManager = schedulerManager;
     }
 
-    public void resume(final MainView view, Bundle savedInstanceState)
+    public void resume(final ModelViewHolder modelViewHolder)
     {
-        if(null != savedInstanceState && null != savedInstanceState.getParcelable(MODEL))
+        final ProductsModel productsModel = modelViewHolder.getModel();
+        final MainView view = modelViewHolder.getView();
+
+        if(null != productsModel)
         {
-            productsModel = savedInstanceState.getParcelable(MODEL);
             view.refreshProductList(productsModel.getItems());
         }
-        if(null == productsModel)
+        else
         {
-            productsModel = new ProductsModel();
+
             Observable<String[]> productsObservable = Observable.create(new Observable.OnSubscribe<String[]>()
             {
                 @Override
@@ -64,7 +62,9 @@ public class MainPresenter
                         @Override
                         public void call(String[] strings)  //success
                         {
+                            ProductsModel productsModel = new ProductsModel();
                             productsModel.setItems(strings);
+                            modelViewHolder.setModel(productsModel);
                             view.refreshProductList(strings);
                         }
                     }, new Action1<Throwable>()
@@ -78,20 +78,5 @@ public class MainPresenter
 
             view.showLoading();
         }
-    }
-
-    public void saveInstanceState(Bundle outState)
-    {
-        outState.putParcelable(MODEL,productsModel);
-    }
-
-    public ProductsModel getProductsModel()
-    {
-        return productsModel;
-    }
-
-    public void setProductsModel(ProductsModel productsModel)
-    {
-        this.productsModel = productsModel;
     }
 }

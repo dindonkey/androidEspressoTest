@@ -9,6 +9,7 @@ import android.widget.ListView;
 import javax.inject.Inject;
 
 import it.dindokey.testespresso.app.App;
+import it.dindokey.testespresso.app.ModelViewHolder;
 import it.dindokey.testespresso.app.presenter.MainPresenter;
 import it.dindokey.testespresso.app.R;
 
@@ -17,12 +18,14 @@ public class MainActivity extends AppCompatActivity implements MainView
     private ProductListViewAdapter productListViewAdapter;
 
     @Inject MainPresenter mainPresenter;
+    private ModelViewHolder modelViewHolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ((App)getApplication()).getComponent().inject(this);
 
         ListView listView = (ListView) findViewById(R.id.list_view);
 
@@ -30,8 +33,9 @@ public class MainActivity extends AppCompatActivity implements MainView
                 android.R.layout.simple_list_item_1, android.R.id.text1);
         listView.setAdapter(productListViewAdapter);
 
-        ((App)getApplication()).getComponent().inject(this);
-        mainPresenter.resume(this, savedInstanceState);
+        //TODO verify leak passing this
+        modelViewHolder = new ModelViewHolder(this, savedInstanceState);
+        mainPresenter.resume(modelViewHolder);
     }
 
     @Override
@@ -58,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements MainView
     @Override
     protected void onSaveInstanceState(Bundle outState)
     {
-        mainPresenter.saveInstanceState(outState);
+        modelViewHolder.saveInstanceState(outState);
     }
 
     @Override
