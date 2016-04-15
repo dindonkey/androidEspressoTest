@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import it.dindokey.testespresso.app.ModelViewHolder;
 import it.dindokey.testespresso.app.SchedulerManager;
 import it.dindokey.testespresso.app.api.ProductsApiService;
 import it.dindokey.testespresso.app.model.ProductsModel;
@@ -15,11 +16,10 @@ import it.dindokey.testespresso.app.presenter.MainPresenter;
 import it.dindokey.testespresso.app.view.MainView;
 import rx.schedulers.Schedulers;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 /**
@@ -36,6 +36,7 @@ public class MainPresenterTest
 
     private MainPresenter presenter;
     private String[] sampleProducts;
+    private ModelViewHolder modelViewHolderMock;
 
     @Before
     public void setup()
@@ -45,12 +46,13 @@ public class MainPresenterTest
 
         sampleProducts = new String[]{"test product"};
         when(mockedProductsApiService.getProducts()).thenReturn(sampleProducts);
+        modelViewHolderMock = new ModelViewHolder(mockedMainView,savedInstanceStateMock);
     }
 
     @Test
     public void load_products_on_resume() throws Exception
     {
-        presenter.resume(mockedMainView, savedInstanceStateMock);
+        presenter.resume(modelViewHolderMock);
         verify(mockedProductsApiService).getProducts();
         verify(mockedMainView).refreshProductList(sampleProducts);
     }
@@ -58,8 +60,8 @@ public class MainPresenterTest
     @Test
     public void retain_model_after_first_load() throws Exception
     {
-        presenter.resume(mockedMainView, savedInstanceStateMock);
-        presenter.resume(mockedMainView, savedInstanceStateMock);
+        presenter.resume(modelViewHolderMock);
+        presenter.resume(modelViewHolderMock);
         verify(mockedProductsApiService, times(1)).getProducts();
     }
 
@@ -68,18 +70,19 @@ public class MainPresenterTest
     {
         ProductsModel model = new ProductsModel();
         model.setItems(sampleProducts);
-
         when(savedInstanceStateMock.getParcelable(anyString())).thenReturn(model);
-        presenter.resume(mockedMainView, savedInstanceStateMock);
 
-        assertEquals(model, presenter.getProductsModel());
+        ModelViewHolder modelViewHolderMock = new ModelViewHolder(mockedMainView,savedInstanceStateMock);
+        presenter.resume(modelViewHolderMock);
+
+        verifyNoMoreInteractions(mockedProductsApiService);
         verify(mockedMainView).refreshProductList(sampleProducts);
     }
 
     @Test
     public void call_show_loading_while_fetching_data() throws Exception
     {
-        presenter.resume(mockedMainView,savedInstanceStateMock);
+        presenter.resume(modelViewHolderMock);
         verify(mockedMainView).showLoading();
     }
 
@@ -87,7 +90,7 @@ public class MainPresenterTest
     public void call_show_error_if_occours() throws Exception
     {
         when(mockedProductsApiService.getProducts()).thenThrow(new RuntimeException());
-        presenter.resume(mockedMainView,savedInstanceStateMock);
+        presenter.resume(modelViewHolderMock);
         verify(mockedMainView).showError();
 
     }
