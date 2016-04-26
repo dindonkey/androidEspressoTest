@@ -8,6 +8,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Arrays;
+import java.util.List;
+
 import it.dindokey.testespresso.app.ModelViewHolder;
 import it.dindokey.testespresso.app.SchedulerManager;
 import it.dindokey.testespresso.app.api.ProductsApiService;
@@ -35,7 +38,7 @@ public class MainPresenterTest
     @Mock Bundle savedInstanceStateMock;
 
     private MainPresenter presenter;
-    private String[] sampleProducts;
+    private List<String> sampleProducts;
     private ModelViewHolder modelViewHolderMock;
 
     @Before
@@ -44,7 +47,7 @@ public class MainPresenterTest
         SchedulerManager schedulerManager = new SchedulerManager(Schedulers.immediate(),Schedulers.immediate());
         presenter = new MainPresenter(mockedProductsApiService, schedulerManager);
 
-        sampleProducts = new String[]{"test product"};
+        sampleProducts = Arrays.asList("test product");
         when(mockedProductsApiService.getProducts()).thenReturn(sampleProducts);
         modelViewHolderMock = new ModelViewHolder(mockedMainView,savedInstanceStateMock);
     }

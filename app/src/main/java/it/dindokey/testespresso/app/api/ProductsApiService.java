@@ -1,11 +1,14 @@
 package it.dindokey.testespresso.app.api;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by simone on 2/8/16.
  */
 public class ProductsApiService
 {
-    public String[] getProducts()
+    public List<String> getProducts()
     {
         try
         {
@@ -14,6 +17,6 @@ public class ProductsApiService
         {
             e.printStackTrace();
         }
-        return new String[]{"First product"};
+        return Arrays.asList("First product");
     }
 }

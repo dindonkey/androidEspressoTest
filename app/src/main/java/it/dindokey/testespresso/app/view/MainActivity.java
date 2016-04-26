@@ -6,6 +6,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import it.dindokey.testespresso.app.App;
@@ -39,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements MainView
     }
 
     @Override
-    public void refreshProductList(String[] products)
+    public void refreshProductList(List<String> products)
     {
         productListViewAdapter.setValues(products);
         productListViewAdapter.reload();
@@ -48,14 +51,14 @@ public class MainActivity extends AppCompatActivity implements MainView
     @Override
     public void showLoading()
     {
-        productListViewAdapter.setValues(new String[]{getString(R.string.loading_message)});
+        productListViewAdapter.setValues(Arrays.asList(getString(R.string.loading_message)));
         productListViewAdapter.reload();
     }
 
     @Override
     public void showError()
     {
-        productListViewAdapter.setValues(new String[]{getString(R.string.error_message)});
+        productListViewAdapter.setValues(Arrays.asList(getString(R.string.error_message)));
         productListViewAdapter.reload();
     }
 

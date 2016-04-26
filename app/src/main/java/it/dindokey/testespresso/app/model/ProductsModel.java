@@ -3,34 +3,37 @@ package it.dindokey.testespresso.app.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by simone on 3/16/16.
  */
 public class ProductsModel implements Parcelable
 {
-    private String[] items;
+    private List<String> items;
 
     public ProductsModel() {
-        items = new String[]{};
+        items = new ArrayList<String>();
     }
 
     protected ProductsModel(Parcel in)
     {
-        items = in.createStringArray();
+        items = in.createStringArrayList();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeStringArray(items);
+        dest.writeStringList(items);
     }
 
-    public String[] getItems()
+    public List<String> getItems()
     {
         return items;
     }
 
-    public void setItems(String[] items)
+    public void setItems(List<String> items)
     {
         this.items = items;
     }

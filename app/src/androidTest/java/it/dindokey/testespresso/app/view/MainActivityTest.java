@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -15,6 +14,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.Arrays;
 
 import javax.inject.Inject;
 
@@ -69,7 +70,7 @@ public class MainActivityTest
     @Test
     public void show_product_list() throws Exception
     {
-        when(mockedProductsApiService.getProducts()).thenReturn(new String[]{"test product"});
+        when(mockedProductsApiService.getProducts()).thenReturn(Arrays.asList("test product"));
 
         mActivityRule.launchActivity(new Intent());
 
@@ -80,7 +81,7 @@ public class MainActivityTest
     @Test
     public void retain_products_on_rotation() throws Exception
     {
-        when(mockedProductsApiService.getProducts()).thenReturn(new String[]{"test product"});
+        when(mockedProductsApiService.getProducts()).thenReturn(Arrays.asList("test product"));
 
         mActivityRule.launchActivity(new Intent());
         onView(withText("test product")).check(matches(isDisplayed()));
@@ -111,7 +112,7 @@ public class MainActivityTest
             @Override
             public void run()
             {
-                mActivityRule.getActivity().refreshProductList(new String[]{"test product"});
+                mActivityRule.getActivity().refreshProductList(Arrays.asList("test product"));
             }
         });
 

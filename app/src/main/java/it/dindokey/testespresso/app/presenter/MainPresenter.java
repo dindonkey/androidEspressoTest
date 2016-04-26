@@ -1,5 +1,7 @@
 package it.dindokey.testespresso.app.presenter;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import it.dindokey.testespresso.app.ModelViewHolder;
@@ -39,15 +41,17 @@ public class MainPresenter
         else
         {
 
-            Observable<String[]> productsObservable = Observable.create(new Observable.OnSubscribe<String[]>()
+            Observable<List<String>> productsObservable = Observable.create(new Observable.OnSubscribe<List<String>>()
             {
                 @Override
-                public void call(Subscriber<? super String[]> subscriber)
+                public void call(Subscriber<? super List<String>> subscriber)
                 {
                     try
                     {
                         subscriber.onNext(productsApiService.getProducts());
-                    } catch (Exception e)
+                        subscriber.onCompleted();
+                    }
+                    catch (Exception e)
                     {
                         subscriber.onError(e);
                     }
@@ -57,10 +61,10 @@ public class MainPresenter
             productsObservable
                     .subscribeOn(schedulerManager.io())
                     .observeOn(schedulerManager.mainThread())
-                    .subscribe(new Action1<String[]>()
+                    .subscribe(new Action1<List<String>>()
                     {
                         @Override
-                        public void call(String[] strings)  //success
+                        public void call(List<String> strings)  //success
                         {
                             ProductsModel productsModel = new ProductsModel();
                             productsModel.setItems(strings);
