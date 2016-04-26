@@ -40,25 +40,7 @@ public class MainPresenter
         }
         else
         {
-
-            Observable<List<String>> productsObservable = Observable.create(new Observable.OnSubscribe<List<String>>()
-            {
-                @Override
-                public void call(Subscriber<? super List<String>> subscriber)
-                {
-                    try
-                    {
-                        subscriber.onNext(productsApiService.getProducts());
-                        subscriber.onCompleted();
-                    }
-                    catch (Exception e)
-                    {
-                        subscriber.onError(e);
-                    }
-                }
-            });
-
-            productsObservable
+            productsApiService.getProducts()
                     .subscribeOn(schedulerManager.io())
                     .observeOn(schedulerManager.mainThread())
                     .subscribe(new Action1<List<String>>()

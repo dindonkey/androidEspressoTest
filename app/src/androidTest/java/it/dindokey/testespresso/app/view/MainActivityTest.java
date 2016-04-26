@@ -10,12 +10,14 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -24,6 +26,8 @@ import it.dindokey.testespresso.app.DaggerTestAppComponent;
 import it.dindokey.testespresso.app.TestAppComponent;
 import it.dindokey.testespresso.app.TestAppModule;
 import it.dindokey.testespresso.app.api.ProductsApiService;
+import rx.Observable;
+import rx.Subscriber;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -57,6 +61,8 @@ public class MainActivityTest
         App application = (App) InstrumentationRegistry.getTargetContext().getApplicationContext();
         application.setComponent(testAppComponent);
         testAppComponent.inject(this);
+
+        when(mockedProductsApiService.getProducts()).thenReturn(testProductsObservable());
     }
 
     @Test
@@ -70,7 +76,7 @@ public class MainActivityTest
     @Test
     public void show_product_list() throws Exception
     {
-        when(mockedProductsApiService.getProducts()).thenReturn(Arrays.asList("test product"));
+        when(mockedProductsApiService.getProducts()).thenReturn(testProductsObservable());
 
         mActivityRule.launchActivity(new Intent());
 
@@ -81,7 +87,7 @@ public class MainActivityTest
     @Test
     public void retain_products_on_rotation() throws Exception
     {
-        when(mockedProductsApiService.getProducts()).thenReturn(Arrays.asList("test product"));
+        when(mockedProductsApiService.getProducts()).thenReturn(testProductsObservable());
 
         mActivityRule.launchActivity(new Intent());
         onView(withText("test product")).check(matches(isDisplayed()));
@@ -156,8 +162,38 @@ public class MainActivityTest
     @Test
     public void show_load_error_if_occours() throws Exception
     {
-        when(mockedProductsApiService.getProducts()).thenThrow(new RuntimeException());
+        when(mockedProductsApiService.getProducts()).thenReturn(brokenProductsObservable());
         mActivityRule.launchActivity(new Intent());
         onView(withText("error")).check(matches(isDisplayed()));
+    }
+
+    private Observable<List<String>> testProductsObservable()
+    {
+        return Observable.create(new Observable.OnSubscribe<List<String>>()
+        {
+            @Override
+            public void call(Subscriber<? super List<String>> subscriber)
+            {
+                subscriber.onNext(Arrays.asList("test product"));
+            }
+        });
+    }
+
+    private Observable<List<String>> brokenProductsObservable()
+    {
+        return Observable.create(new Observable.OnSubscribe<List<String>>()
+        {
+            @Override
+            public void call(Subscriber<? super List<String>> subscriber)
+            {
+                subscriber.onError(new RuntimeException());
+            }
+        });
+    }
+
+    @After
+    public void tearDown() throws Exception
+    {
+        mActivityRule.getActivity().finish();
     }
 }

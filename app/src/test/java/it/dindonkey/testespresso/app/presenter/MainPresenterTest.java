@@ -17,6 +17,8 @@ import it.dindokey.testespresso.app.api.ProductsApiService;
 import it.dindokey.testespresso.app.model.ProductsModel;
 import it.dindokey.testespresso.app.presenter.MainPresenter;
 import it.dindokey.testespresso.app.view.MainView;
+import rx.Observable;
+import rx.Subscriber;
 import rx.schedulers.Schedulers;
 
 import static org.mockito.Matchers.anyString;
@@ -48,7 +50,7 @@ public class MainPresenterTest
         presenter = new MainPresenter(mockedProductsApiService, schedulerManager);
 
         sampleProducts = Arrays.asList("test product");
-        when(mockedProductsApiService.getProducts()).thenReturn(sampleProducts);
+        when(mockedProductsApiService.getProducts()).thenReturn(Observable.just(sampleProducts));
         modelViewHolderMock = new ModelViewHolder(mockedMainView,savedInstanceStateMock);
     }
 
@@ -92,9 +94,21 @@ public class MainPresenterTest
     @Test
     public void call_show_error_if_occours() throws Exception
     {
-        when(mockedProductsApiService.getProducts()).thenThrow(new RuntimeException());
+        when(mockedProductsApiService.getProducts()).thenReturn(brokenProductsObservable());
         presenter.resume(modelViewHolderMock);
         verify(mockedMainView).showError();
 
+    }
+
+    private Observable<List<String>> brokenProductsObservable()
+    {
+        return Observable.create(new Observable.OnSubscribe<List<String>>()
+        {
+            @Override
+            public void call(Subscriber<? super List<String>> subscriber)
+            {
+                subscriber.onError(new RuntimeException());
+            }
+        });
     }
 }
