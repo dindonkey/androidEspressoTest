@@ -16,7 +16,8 @@ import rx.schedulers.Schedulers;
 @Module
 public class TestAppModule
 {
-    @Provides @Singleton ProductsApiService providesProductsApi()
+    @Provides @Singleton
+    ProductsApiService providesProductsApi()
     {
         return Mockito.mock(ProductsApiService.class);
     }

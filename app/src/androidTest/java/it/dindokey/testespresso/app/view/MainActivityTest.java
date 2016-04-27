@@ -44,7 +44,8 @@ import static org.mockito.Mockito.when;
 @LargeTest
 public class MainActivityTest
 {
-    @Inject ProductsApiService mockedProductsApiService;
+    @Inject
+    ProductsApiService mockedProductsApiService;
 
     @Rule public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule(MainActivity.class,
             true,

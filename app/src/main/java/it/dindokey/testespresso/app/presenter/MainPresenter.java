@@ -9,8 +9,6 @@ import it.dindokey.testespresso.app.SchedulerManager;
 import it.dindokey.testespresso.app.api.ProductsApiService;
 import it.dindokey.testespresso.app.model.ProductsModel;
 import it.dindokey.testespresso.app.view.MainView;
-import rx.Observable;
-import rx.Subscriber;
 import rx.functions.Action1;
 
 /**

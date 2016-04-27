@@ -33,7 +33,8 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class MainPresenterTest
 {
-    @Mock ProductsApiService mockedProductsApiService;
+    @Mock
+    ProductsApiService mockedProductsApiService;
 
     @Mock MainView mockedMainView;
 
