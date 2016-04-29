@@ -9,6 +9,7 @@ import it.dindokey.testespresso.app.SchedulerManager;
 import it.dindokey.testespresso.app.api.ProductsApiService;
 import it.dindokey.testespresso.app.model.ProductsModel;
 import it.dindokey.testespresso.app.view.MainView;
+import rx.Observable;
 import rx.functions.Action1;
 
 /**
@@ -19,6 +20,8 @@ public class MainPresenter
     private SchedulerManager schedulerManager;
 
     private ProductsApiService productsApiService;
+
+    private Observable<List<String>> observable;
 
     @Inject
     public MainPresenter(ProductsApiService productsApiService, SchedulerManager schedulerManager)
@@ -32,35 +35,59 @@ public class MainPresenter
         final ProductsModel productsModel = modelViewHolder.getModel();
         final MainView view = modelViewHolder.getView();
 
-        if(null != productsModel)
+        if (null != productsModel)
         {
             view.refreshProductList(productsModel.getItems());
-        }
-        else
+        } else
         {
-            productsApiService.getProducts()
-                    .subscribeOn(schedulerManager.io())
-                    .observeOn(schedulerManager.mainThread())
-                    .subscribe(new Action1<List<String>>()
-                    {
-                        @Override
-                        public void call(List<String> strings)  //success
-                        {
-                            ProductsModel productsModel = new ProductsModel();
-                            productsModel.setItems(strings);
-                            modelViewHolder.setModel(productsModel);
-                            view.refreshProductList(strings);
-                        }
-                    }, new Action1<Throwable>()
-                    {
-                        @Override
-                        public void call(Throwable throwable)   //error
-                        {
-                            view.showError();
-                        }
-                    });
+            //if observable is not running( observable == null)
+            //   create observable
+            //   compose
+            //   connect with replay <-- start background task
+            // subscribe to observable (oncomplete -> {}, onerror -> {})
+            // show loading
+
+            if (null == observable)
+            {
+                observable = productsApiService
+                        .getProducts()
+                        .compose(this.<List<String>>applySchedulers());
+            }
+
+            observable.subscribe(new Action1<List<String>>()
+            {
+                @Override
+                public void call(List<String> strings)  //success
+                {
+                    ProductsModel productsModel = new ProductsModel();
+                    productsModel.setItems(strings);
+                    modelViewHolder.setModel(productsModel);
+                    view.refreshProductList(strings);
+                }
+            }, new Action1<Throwable>()
+            {
+                @Override
+                public void call(Throwable throwable)   //error
+                {
+                    view.showError();
+                }
+            });
 
             view.showLoading();
         }
     }
+
+    <T> Observable.Transformer<T, T> applySchedulers()
+    {
+        return new Observable.Transformer<T, T>()
+        {
+            @Override
+            public Observable<T> call(Observable<T> observable)
+            {
+                return observable.subscribeOn(schedulerManager.computation())
+                        .observeOn(schedulerManager.mainThread());
+            }
+        };
+    }
+
 }
