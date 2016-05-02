@@ -1,7 +1,6 @@
 package it.dindonkey.testespresso.app.presenter;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -10,8 +9,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -21,42 +18,29 @@ import it.dindokey.testespresso.app.SchedulerManager;
 import it.dindokey.testespresso.app.api.ProductsApiService;
 import it.dindokey.testespresso.app.presenter.MainPresenter;
 import it.dindokey.testespresso.app.view.MainView;
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
+import it.dindonkey.testespresso.app.AppTestCase;
 import rx.schedulers.Schedulers;
-import rx.schedulers.TestScheduler;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.validateMockitoUsage;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static rx.Observable.just;
 
 /**
  * Created by simone on 4/28/16.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class MainPresenterAsyncTest
+public class MainPresenterAsyncTest extends AppTestCase
 {
     private MainPresenter presenter;
+    private ModelViewHolder modelViewHolderMock;
 
     @Mock
     ProductsApiService mockedProductsApiService;
-
     @Mock
-    MainView mockedMainView;
-
+    MainView mainViewMock;
     @Mock
     Bundle savedInstanceStateMock;
-
-    private ModelViewHolder modelViewHolderMock;
-
-    private List<String> sampleProducts;
-    private TestScheduler _God_scheduler;
 
     @Before
     public void setUp() throws Exception
@@ -64,9 +48,8 @@ public class MainPresenterAsyncTest
         SchedulerManager schedulerManager = new SchedulerManager(Schedulers.immediate(),
                 Schedulers.immediate());
         presenter = new MainPresenter(mockedProductsApiService, schedulerManager);
-        sampleProducts = Arrays.asList("test product");
-        modelViewHolderMock = new ModelViewHolder(mockedMainView, savedInstanceStateMock);
-        _God_scheduler = new TestScheduler();
+
+        modelViewHolderMock = new ModelViewHolder(mainViewMock, savedInstanceStateMock);
     }
 
     @Ignore
@@ -79,7 +62,7 @@ public class MainPresenterAsyncTest
         presenter.resume(modelViewHolderMock);
         executor.awaitTermination(4, TimeUnit.SECONDS);
 
-        verify(mockedMainView).refreshProductList(sampleProducts);
+        verify(mainViewMock).refreshProductList(sampleProducts);
     }
 
     @Test
@@ -92,7 +75,7 @@ public class MainPresenterAsyncTest
         presenter.resume(modelViewHolderMock);
         _God_scheduler.advanceTimeBy(4, TimeUnit.SECONDS);
 
-        verify(mockedMainView).refreshProductList(sampleProducts);
+        verify(mainViewMock).refreshProductList(sampleProducts);
     }
 
     @Test
@@ -117,22 +100,5 @@ public class MainPresenterAsyncTest
     {
         //e.g. we want to resume the request if presenter is destroyed and re-created (activity rotation)
         fail("TBD");
-
     }
-
-    @NonNull
-    private Observable<List<String>> delayedProductsObservable()
-    {
-        return just(sampleProducts).delay(4,
-                TimeUnit.SECONDS);
-    }
-
-    @NonNull
-    private Observable<List<String>> timeControlledProductsObservable(int secondsToComplete)
-    {
-        return just(sampleProducts).delay(secondsToComplete,
-                TimeUnit.SECONDS, _God_scheduler);
-    }
-
-
 }

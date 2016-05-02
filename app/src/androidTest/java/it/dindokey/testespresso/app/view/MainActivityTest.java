@@ -33,6 +33,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -166,6 +167,13 @@ public class MainActivityTest
         when(mockedProductsApiService.getProducts()).thenReturn(brokenProductsObservable());
         mActivityRule.launchActivity(new Intent());
         onView(withText("error")).check(matches(isDisplayed()));
+    }
+
+
+    @Test
+    public void pause_and_resume_activity() throws Exception
+    {
+        fail("TBD");
     }
 
     private Observable<List<String>> testProductsObservable()
