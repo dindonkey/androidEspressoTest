@@ -12,7 +12,7 @@ public class ModelViewHolder
 {
     public static final String MODEL = "model";
 
-    private final MainView view;
+    private MainView view;
 
     private ProductsModel model;
 
@@ -29,6 +29,11 @@ public class ModelViewHolder
     public MainView getView()
     {
         return view;
+    }
+
+    public void setView(MainView view)
+    {
+        this.view = view;
     }
 
     public void setModel(ProductsModel model)

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -63,6 +64,7 @@ public class MainPresenterAsyncTest
         _God_scheduler = new TestScheduler();
     }
 
+    @Ignore
     @Test
     public void slow_test_just_for_case_study() throws Exception
     {
@@ -103,14 +105,6 @@ public class MainPresenterAsyncTest
         _God_scheduler.advanceTimeBy(secondsToComplete, TimeUnit.SECONDS);
 
         verify(mockedProductsApiService, times(1)).getProducts();
-    }
-
-
-    @Test
-    public void redo_request_if_refresh_data_is_requested() throws Exception
-    {
-        //e.g. a previous request was done and was completed, UI triggers refresh data, we need to reload data
-        fail("TBD");
     }
 
     @Test

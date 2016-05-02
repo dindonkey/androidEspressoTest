@@ -8,9 +8,8 @@ import it.dindokey.testespresso.app.ModelViewHolder;
 import it.dindokey.testespresso.app.SchedulerManager;
 import it.dindokey.testespresso.app.api.ProductsApiService;
 import it.dindokey.testespresso.app.model.ProductsModel;
-import it.dindokey.testespresso.app.view.MainView;
 import rx.Observable;
-import rx.functions.Action1;
+import rx.Observer;
 
 /**
  * Created by simone on 2/24/16.
@@ -18,7 +17,6 @@ import rx.functions.Action1;
 public class MainPresenter
 {
     private SchedulerManager schedulerManager;
-
     private ProductsApiService productsApiService;
 
     private Observable<List<String>> observable;
@@ -30,51 +28,54 @@ public class MainPresenter
         this.schedulerManager = schedulerManager;
     }
 
-    public void resume(final ModelViewHolder modelViewHolder)
+    public void resume(ModelViewHolder modelViewHolder)
     {
-        final ProductsModel productsModel = modelViewHolder.getModel();
-        final MainView view = modelViewHolder.getView();
-
-        if (null != productsModel)
+        if (null != modelViewHolder.getModel())
         {
-            view.refreshProductList(productsModel.getItems());
+            modelViewHolder.getView().refreshProductList(modelViewHolder.getModel().getItems());
         } else
         {
-            //if observable is not running( observable == null)
-            //   create observable
-            //   compose
-            //   connect with replay <-- start background task
-            // subscribe to observable (oncomplete -> {}, onerror -> {})
-            // show loading
-
             if (null == observable)
             {
-                observable = productsApiService
-                        .getProducts()
-                        .compose(this.<List<String>>applySchedulers());
+                loadData(modelViewHolder);
+            }
+            modelViewHolder.getView().showLoading();
+        }
+    }
+
+    public void loadData(ModelViewHolder modelViewHolder)
+    {
+        observable = productsApiService
+                .getProducts()
+                .compose(this.<List<String>>applySchedulers());
+        observable.subscribe(createObserver(modelViewHolder));
+    }
+
+    private Observer<List<String>> createObserver(final ModelViewHolder modelViewHolder)
+    {
+        return new Observer<List<String>>()
+        {
+            @Override
+            public void onCompleted()
+            {
+                observable = null;
             }
 
-            observable.subscribe(new Action1<List<String>>()
+            @Override
+            public void onError(Throwable e)
             {
-                @Override
-                public void call(List<String> strings)  //success
-                {
-                    ProductsModel productsModel = new ProductsModel();
-                    productsModel.setItems(strings);
-                    modelViewHolder.setModel(productsModel);
-                    view.refreshProductList(strings);
-                }
-            }, new Action1<Throwable>()
-            {
-                @Override
-                public void call(Throwable throwable)   //error
-                {
-                    view.showError();
-                }
-            });
+                modelViewHolder.getView().showError();
+            }
 
-            view.showLoading();
-        }
+            @Override
+            public void onNext(List<String> strings)
+            {
+                ProductsModel productsModel = new ProductsModel();
+                productsModel.setItems(strings);
+                modelViewHolder.setModel(productsModel);
+                modelViewHolder.getView().refreshProductList(strings);
+            }
+        };
     }
 
     <T> Observable.Transformer<T, T> applySchedulers()
@@ -89,5 +90,4 @@ public class MainPresenter
             }
         };
     }
-
 }

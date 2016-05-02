@@ -22,10 +22,12 @@ import rx.Subscriber;
 import rx.schedulers.Schedulers;
 
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static rx.Observable.just;
 
 /**
  * Created by simone on 2/29/16.
@@ -51,7 +53,7 @@ public class MainPresenterTest
         presenter = new MainPresenter(mockedProductsApiService, schedulerManager);
 
         sampleProducts = Arrays.asList("test product");
-        when(mockedProductsApiService.getProducts()).thenReturn(Observable.just(sampleProducts));
+        when(mockedProductsApiService.getProducts()).thenReturn(just(sampleProducts));
         modelViewHolderMock = new ModelViewHolder(mockedMainView,savedInstanceStateMock);
     }
 
@@ -74,9 +76,7 @@ public class MainPresenterTest
     @Test
     public void load_model_from_saved_instance_state_and_update_view() throws Exception
     {
-        ProductsModel model = new ProductsModel();
-        model.setItems(sampleProducts);
-        when(savedInstanceStateMock.getParcelable(anyString())).thenReturn(model);
+        putTestModelToInstanceState();
 
         ModelViewHolder modelViewHolderMock = new ModelViewHolder(mockedMainView,savedInstanceStateMock);
         presenter.resume(modelViewHolderMock);
@@ -99,6 +99,30 @@ public class MainPresenterTest
         presenter.resume(modelViewHolderMock);
         verify(mockedMainView).showError();
 
+    }
+
+    @Test
+    public void refresh_data() throws Exception
+    {
+        //e.g. a previous request was done and was completed, UI triggers refresh data, we need to reload data
+        presenter.resume(modelViewHolderMock); // first request
+
+        MainView anotheMainViewMock = mock(MainView.class);
+        modelViewHolderMock.setView(anotheMainViewMock);
+
+        List<String> freshData = Arrays.asList("fresh data");
+        when(mockedProductsApiService.getProducts()).thenReturn(just(freshData));
+
+        presenter.loadData(modelViewHolderMock); //e.g. reload button or pull to refresh
+
+        verify(anotheMainViewMock).refreshProductList(freshData);
+    }
+
+    private void putTestModelToInstanceState()
+    {
+        ProductsModel model = new ProductsModel();
+        model.setItems(sampleProducts);
+        when(savedInstanceStateMock.getParcelable(anyString())).thenReturn(model);
     }
 
     private Observable<List<String>> brokenProductsObservable()
