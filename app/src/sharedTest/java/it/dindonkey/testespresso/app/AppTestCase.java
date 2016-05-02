@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
+import rx.Subscription;
 import rx.schedulers.TestScheduler;
 import rx.Subscriber;
 
@@ -32,14 +33,7 @@ public class AppTestCase
 
     protected Observable<List<String>> testProductsObservable()
     {
-        return Observable.create(new Observable.OnSubscribe<List<String>>()
-        {
-            @Override
-            public void call(Subscriber<? super List<String>> subscriber)
-            {
-                subscriber.onNext(Arrays.asList("test product"));
-            }
-        });
+        return just(sampleProducts);
     }
 
     protected Observable<List<String>> brokenProductsObservable()
@@ -50,6 +44,18 @@ public class AppTestCase
             public void call(Subscriber<? super List<String>> subscriber)
             {
                 subscriber.onError(new RuntimeException());
+            }
+        });
+    }
+
+    protected Observable<List<String>> observableWithSubscription(final Subscription subscription)
+    {
+        return Observable.create(new Observable.OnSubscribe<List<String>>()
+        {
+            @Override
+            public void call(Subscriber<? super List<String>> subscriber)
+            {
+                subscriber.add(subscription);
             }
         });
     }

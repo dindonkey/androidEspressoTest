@@ -17,8 +17,7 @@ import it.dindokey.testespresso.app.api.ProductsApiService;
 import it.dindokey.testespresso.app.model.ProductsModel;
 import it.dindokey.testespresso.app.presenter.MainPresenter;
 import it.dindokey.testespresso.app.view.MainView;
-import rx.Observable;
-import rx.Subscriber;
+import it.dindonkey.testespresso.app.AppTestCase;
 import rx.Subscription;
 import rx.schedulers.Schedulers;
 
@@ -34,14 +33,14 @@ import static rx.Observable.just;
  * Created by simone on 2/29/16.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class MainPresenterTest
+public class MainPresenterTest extends AppTestCase
 {
     @Mock
     ProductsApiService mockedProductsApiService;
-
-    @Mock MainView mockedMainView;
-
-    @Mock Bundle savedInstanceStateMock;
+    @Mock
+    MainView mockedMainView;
+    @Mock
+    Bundle savedInstanceStateMock;
 
     private MainPresenter presenter;
     private List<String> sampleProducts;
@@ -50,12 +49,13 @@ public class MainPresenterTest
     @Before
     public void setup()
     {
-        SchedulerManager schedulerManager = new SchedulerManager(Schedulers.immediate(),Schedulers.immediate());
+        SchedulerManager schedulerManager = new SchedulerManager(Schedulers.immediate(),
+                Schedulers.immediate());
         presenter = new MainPresenter(mockedProductsApiService, schedulerManager);
 
         sampleProducts = Arrays.asList("test product");
         when(mockedProductsApiService.getProducts()).thenReturn(just(sampleProducts));
-        modelViewHolderMock = new ModelViewHolder(mockedMainView,savedInstanceStateMock);
+        modelViewHolderMock = new ModelViewHolder(mockedMainView, savedInstanceStateMock);
     }
 
     @Test
@@ -79,7 +79,8 @@ public class MainPresenterTest
     {
         putTestModelIntoInstanceState();
 
-        ModelViewHolder modelViewHolderMock = new ModelViewHolder(mockedMainView,savedInstanceStateMock);
+        ModelViewHolder modelViewHolderMock = new ModelViewHolder(mockedMainView,
+                savedInstanceStateMock);
         presenter.resume(modelViewHolderMock);
 
         verifyNoMoreInteractions(mockedProductsApiService);
@@ -125,7 +126,8 @@ public class MainPresenterTest
     {
         //e.g. unsubscription is necessary to release references and perform a good GC
         Subscription subscriptionMock = mock(Subscription.class);
-        when(mockedProductsApiService.getProducts()).thenReturn(observableWithSubscription(subscriptionMock));
+        when(mockedProductsApiService.getProducts()).thenReturn(observableWithSubscription(
+                subscriptionMock));
         presenter.resume(modelViewHolderMock);
         presenter.pause();
 
@@ -139,27 +141,4 @@ public class MainPresenterTest
         when(savedInstanceStateMock.getParcelable(anyString())).thenReturn(model);
     }
 
-    private Observable<List<String>> brokenProductsObservable()
-    {
-        return Observable.create(new Observable.OnSubscribe<List<String>>()
-        {
-            @Override
-            public void call(Subscriber<? super List<String>> subscriber)
-            {
-                subscriber.onError(new RuntimeException());
-            }
-        });
-    }
-
-    private Observable<List<String>> observableWithSubscription(final Subscription subscription)
-    {
-        return Observable.create(new Observable.OnSubscribe<List<String>>()
-        {
-            @Override
-            public void call(Subscriber<? super List<String>> subscriber)
-            {
-                subscriber.add(subscription);
-            }
-        });
-    }
 }
