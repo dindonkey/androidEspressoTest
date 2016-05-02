@@ -1,13 +1,12 @@
 package it.dindonkey.testespresso.app;
 
-import android.support.annotation.NonNull;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.schedulers.TestScheduler;
+import rx.Subscriber;
 
 import static rx.Observable.just;
 
@@ -19,18 +18,40 @@ public class AppTestCase
     protected List<String> sampleProducts = Arrays.asList("test product");
     protected TestScheduler _God_scheduler = new TestScheduler();
 
-    @NonNull
     protected Observable<List<String>> delayedProductsObservable()
     {
         return just(sampleProducts).delay(4,
                 TimeUnit.SECONDS);
     }
 
-    @NonNull
     protected Observable<List<String>> timeControlledProductsObservable(int secondsToComplete)
     {
         return just(sampleProducts).delay(secondsToComplete,
                 TimeUnit.SECONDS, _God_scheduler);
+    }
+
+    protected Observable<List<String>> testProductsObservable()
+    {
+        return Observable.create(new Observable.OnSubscribe<List<String>>()
+        {
+            @Override
+            public void call(Subscriber<? super List<String>> subscriber)
+            {
+                subscriber.onNext(Arrays.asList("test product"));
+            }
+        });
+    }
+
+    protected Observable<List<String>> brokenProductsObservable()
+    {
+        return Observable.create(new Observable.OnSubscribe<List<String>>()
+        {
+            @Override
+            public void call(Subscriber<? super List<String>> subscriber)
+            {
+                subscriber.onError(new RuntimeException());
+            }
+        });
     }
 
 }

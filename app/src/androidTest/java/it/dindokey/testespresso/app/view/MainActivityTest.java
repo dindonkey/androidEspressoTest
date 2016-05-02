@@ -17,7 +17,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Arrays;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -26,14 +25,12 @@ import it.dindokey.testespresso.app.DaggerTestAppComponent;
 import it.dindokey.testespresso.app.TestAppComponent;
 import it.dindokey.testespresso.app.TestAppModule;
 import it.dindokey.testespresso.app.api.ProductsApiService;
-import rx.Observable;
-import rx.Subscriber;
+import it.dindonkey.testespresso.app.AppTestCase;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -43,12 +40,13 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class MainActivityTest
+public class MainActivityTest extends AppTestCase
 {
     @Inject
     ProductsApiService mockedProductsApiService;
 
-    @Rule public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule(MainActivity.class,
+    @Rule
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule(MainActivity.class,
             true,
             false);
 
@@ -97,18 +95,6 @@ public class MainActivityTest
         onView(withText("test product")).check(matches(isDisplayed()));
 
         verify(mockedProductsApiService, times(1)).getProducts();
-    }
-
-    private void rotateScreen() {
-        Context context = InstrumentationRegistry.getTargetContext();
-        int orientation
-                = context.getResources().getConfiguration().orientation;
-
-        Activity activity = mActivityRule.getActivity();
-        activity.setRequestedOrientation(
-                (orientation == Configuration.ORIENTATION_PORTRAIT) ?
-                        ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE :
-                        ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     @Test
@@ -169,36 +155,19 @@ public class MainActivityTest
         onView(withText("error")).check(matches(isDisplayed()));
     }
 
-
-    @Test
-    public void pause_and_resume_activity() throws Exception
+    private void rotateScreen()
     {
-        fail("TBD");
+        Context context = InstrumentationRegistry.getTargetContext();
+        int orientation
+                = context.getResources().getConfiguration().orientation;
+
+        Activity activity = mActivityRule.getActivity();
+        activity.setRequestedOrientation(
+                (orientation == Configuration.ORIENTATION_PORTRAIT) ?
+                        ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE :
+                        ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
-    private Observable<List<String>> testProductsObservable()
-    {
-        return Observable.create(new Observable.OnSubscribe<List<String>>()
-        {
-            @Override
-            public void call(Subscriber<? super List<String>> subscriber)
-            {
-                subscriber.onNext(Arrays.asList("test product"));
-            }
-        });
-    }
-
-    private Observable<List<String>> brokenProductsObservable()
-    {
-        return Observable.create(new Observable.OnSubscribe<List<String>>()
-        {
-            @Override
-            public void call(Subscriber<? super List<String>> subscriber)
-            {
-                subscriber.onError(new RuntimeException());
-            }
-        });
-    }
 
     @After
     public void tearDown() throws Exception
