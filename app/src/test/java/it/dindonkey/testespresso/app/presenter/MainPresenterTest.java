@@ -77,7 +77,7 @@ public class MainPresenterTest
     @Test
     public void load_model_from_saved_instance_state_and_update_view() throws Exception
     {
-        putTestModelToInstanceState();
+        putTestModelIntoInstanceState();
 
         ModelViewHolder modelViewHolderMock = new ModelViewHolder(mockedMainView,savedInstanceStateMock);
         presenter.resume(modelViewHolderMock);
@@ -132,7 +132,7 @@ public class MainPresenterTest
         verify(subscriptionMock).unsubscribe();
     }
 
-    private void putTestModelToInstanceState()
+    private void putTestModelIntoInstanceState()
     {
         ProductsModel model = new ProductsModel();
         model.setItems(sampleProducts);
