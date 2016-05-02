@@ -19,6 +19,7 @@ import it.dindokey.testespresso.app.presenter.MainPresenter;
 import it.dindokey.testespresso.app.view.MainView;
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.schedulers.Schedulers;
 
 import static org.mockito.Matchers.anyString;
@@ -118,6 +119,19 @@ public class MainPresenterTest
         verify(anotheMainViewMock).refreshProductList(freshData);
     }
 
+
+    @Test
+    public void unsubscribe_observer_on_presenter_pause() throws Exception
+    {
+        //e.g. unsubscription is necessary to release references and perform a good GC
+        Subscription subscriptionMock = mock(Subscription.class);
+        when(mockedProductsApiService.getProducts()).thenReturn(observableWithSubscription(subscriptionMock));
+        presenter.resume(modelViewHolderMock);
+        presenter.pause();
+
+        verify(subscriptionMock).unsubscribe();
+    }
+
     private void putTestModelToInstanceState()
     {
         ProductsModel model = new ProductsModel();
@@ -133,6 +147,18 @@ public class MainPresenterTest
             public void call(Subscriber<? super List<String>> subscriber)
             {
                 subscriber.onError(new RuntimeException());
+            }
+        });
+    }
+
+    private Observable<List<String>> observableWithSubscription(final Subscription subscription)
+    {
+        return Observable.create(new Observable.OnSubscribe<List<String>>()
+        {
+            @Override
+            public void call(Subscriber<? super List<String>> subscriber)
+            {
+                subscriber.add(subscription);
             }
         });
     }

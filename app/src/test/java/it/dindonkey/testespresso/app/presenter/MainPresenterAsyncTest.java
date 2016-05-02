@@ -22,11 +22,16 @@ import it.dindokey.testespresso.app.api.ProductsApiService;
 import it.dindokey.testespresso.app.presenter.MainPresenter;
 import it.dindokey.testespresso.app.view.MainView;
 import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
 import rx.schedulers.Schedulers;
 import rx.schedulers.TestScheduler;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.validateMockitoUsage;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static rx.Observable.just;
@@ -108,13 +113,6 @@ public class MainPresenterAsyncTest
     }
 
     @Test
-    public void unsubscribe_observer_if_presenter_is_destroyed() throws Exception
-    {
-        //e.g. unsubscription is necessary to release references and perform a good GC
-        fail("TBD");
-    }
-
-    @Test
     public void resume_request_if_presenter_is_recreated_while_a_previous_request_was_already_running() throws Exception
     {
         //e.g. we want to resume the request if presenter is destroyed and re-created (activity rotation)
@@ -135,4 +133,6 @@ public class MainPresenterAsyncTest
         return just(sampleProducts).delay(secondsToComplete,
                 TimeUnit.SECONDS, _God_scheduler);
     }
+
+
 }

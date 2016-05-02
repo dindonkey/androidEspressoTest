@@ -10,6 +10,7 @@ import it.dindokey.testespresso.app.api.ProductsApiService;
 import it.dindokey.testespresso.app.model.ProductsModel;
 import rx.Observable;
 import rx.Observer;
+import rx.Subscription;
 
 /**
  * Created by simone on 2/24/16.
@@ -20,6 +21,7 @@ public class MainPresenter
     private ProductsApiService productsApiService;
 
     private Observable<List<String>> observable;
+    private Subscription subscription;
 
     @Inject
     public MainPresenter(ProductsApiService productsApiService, SchedulerManager schedulerManager)
@@ -48,7 +50,15 @@ public class MainPresenter
         observable = productsApiService
                 .getProducts()
                 .compose(this.<List<String>>applySchedulers());
-        observable.subscribe(createObserver(modelViewHolder));
+        subscription = observable.subscribe(createObserver(modelViewHolder));
+    }
+
+    public void pause()
+    {
+        if(null != subscription)
+        {
+            subscription.unsubscribe();
+        }
     }
 
     private Observer<List<String>> createObserver(final ModelViewHolder modelViewHolder)
