@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import it.dindokey.testespresso.app.ModelViewHolder;
+import it.dindokey.testespresso.app.ObservableCache;
 import it.dindokey.testespresso.app.SchedulerManager;
 import it.dindokey.testespresso.app.api.ProductsApiService;
 import it.dindokey.testespresso.app.presenter.MainPresenter;
@@ -41,13 +42,17 @@ public class MainPresenterAsyncTest extends AppTestCase
     MainView mainViewMock;
     @Mock
     Bundle savedInstanceStateMock;
+    @Mock
+    ObservableCache observableCacheMock;
 
     @Before
     public void setUp() throws Exception
     {
         SchedulerManager schedulerManager = new SchedulerManager(Schedulers.immediate(),
                 Schedulers.immediate());
-        presenter = new MainPresenter(mockedProductsApiService, schedulerManager);
+        presenter = new MainPresenter(mockedProductsApiService,
+                schedulerManager,
+                observableCacheMock);
 
         modelViewHolderMock = new ModelViewHolder(mainViewMock, savedInstanceStateMock);
     }

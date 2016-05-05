@@ -4,6 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import it.dindokey.testespresso.app.api.HttpClient;
 import it.dindokey.testespresso.app.api.ProductsApiService;
 import it.dindokey.testespresso.app.api.SimpleProductsApiService;
 import rx.android.schedulers.AndroidSchedulers;
@@ -15,14 +16,24 @@ import rx.schedulers.Schedulers;
 @Module
 public class AppModule
 {
-    @Provides @Singleton
+    @Provides
+    @Singleton
     ProductsApiService providesProductsApi()
     {
-        return new SimpleProductsApiService();
+        return new SimpleProductsApiService(new HttpClient());
     }
 
-    @Provides @Singleton SchedulerManager providesSchedulerManager()
+    @Provides
+    @Singleton
+    SchedulerManager providesSchedulerManager()
     {
         return new SchedulerManager(Schedulers.io(), AndroidSchedulers.mainThread());
+    }
+
+    @Provides
+    @Singleton
+    ObservableCache providesObservableCache()
+    {
+        return new ObservableCache();
     }
 }

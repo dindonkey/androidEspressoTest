@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.schedulers.TestScheduler;
-import rx.Subscriber;
 
 import static rx.Observable.just;
 
@@ -59,5 +59,6 @@ public class AppTestCase
             }
         });
     }
+
 
 }

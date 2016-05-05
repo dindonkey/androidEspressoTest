@@ -5,6 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import it.dindokey.testespresso.app.ModelViewHolder;
+import it.dindokey.testespresso.app.ObservableCache;
 import it.dindokey.testespresso.app.SchedulerManager;
 import it.dindokey.testespresso.app.api.ProductsApiService;
 import it.dindokey.testespresso.app.model.ProductsModel;
@@ -18,44 +19,53 @@ import rx.Subscription;
 public class MainPresenter
 {
     private SchedulerManager schedulerManager;
+    private ObservableCache observableCache;
     private ProductsApiService productsApiService;
 
-    private Observable<List<String>> observable;
     private Subscription subscription;
+    private Observer<List<String>> observer;
 
     @Inject
-    public MainPresenter(ProductsApiService productsApiService, SchedulerManager schedulerManager)
+    public MainPresenter(ProductsApiService productsApiService,
+                         SchedulerManager schedulerManager,
+                         ObservableCache observableCache)
     {
         this.productsApiService = productsApiService;
         this.schedulerManager = schedulerManager;
+        this.observableCache = observableCache;
     }
 
     public void resume(ModelViewHolder modelViewHolder)
     {
+        observer = createObserver(modelViewHolder);
         if (null != modelViewHolder.getModel())
         {
             modelViewHolder.getView().refreshProductList(modelViewHolder.getModel().getItems());
         } else
         {
-            if (null == observable)
-            {
-                loadData(modelViewHolder);
-            }
+            loadData();
             modelViewHolder.getView().showLoading();
         }
     }
 
-    public void loadData(ModelViewHolder modelViewHolder)
+    public void loadData()
     {
-        observable = productsApiService
-                .getProducts()
-                .compose(this.<List<String>>applySchedulers());
-        subscription = observable.subscribe(createObserver(modelViewHolder));
+        if (null == observableCache.observable())
+        {
+            observableCache.store(productsApiService
+                    .getProducts()
+                    .compose(this.<List<String>>applySchedulers())
+                    .replay());
+
+            observableCache.observable().connect();
+        }
+
+        subscription = observableCache.observable().subscribe(observer);
     }
 
     public void pause()
     {
-        if(null != subscription)
+        if (null != subscription)
         {
             subscription.unsubscribe();
         }
@@ -68,7 +78,7 @@ public class MainPresenter
             @Override
             public void onCompleted()
             {
-                observable = null;
+                observableCache.clear();
             }
 
             @Override

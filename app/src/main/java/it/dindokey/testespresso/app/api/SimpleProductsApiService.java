@@ -1,6 +1,5 @@
 package it.dindokey.testespresso.app.api;
 
-import java.util.Arrays;
 import java.util.List;
 
 import rx.Observable;
@@ -11,6 +10,14 @@ import rx.Subscriber;
  */
 public class SimpleProductsApiService implements ProductsApiService
 {
+    private HttpClient httpClient;
+
+    public SimpleProductsApiService(HttpClient httpClient)
+    {
+
+        this.httpClient = httpClient;
+    }
+
     @Override
     public Observable<List<String>> getProducts()
     {
@@ -21,11 +28,10 @@ public class SimpleProductsApiService implements ProductsApiService
             {
                 try
                 {
-                    Thread.sleep(10000); //simulate slow network communication
-                    subscriber.onNext(Arrays.asList("First product"));
+
+                    subscriber.onNext(httpClient.get());
                     subscriber.onCompleted();
-                }
-                catch (Exception e)
+                } catch (Exception e)
                 {
                     subscriber.onError(e);
                 }
