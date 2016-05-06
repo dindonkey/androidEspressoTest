@@ -1,19 +1,13 @@
 package it.dindokey.testespresso.app.api;
 
+import java.util.List;
+
+import rx.Observable;
+
 /**
- * Created by simone on 2/8/16.
+ * Created by simone on 4/26/16.
  */
-public class ProductsApiService
+public interface ProductsApiService
 {
-    public String[] getProducts()
-    {
-        try
-        {
-            Thread.sleep(10000); //simulate slow network communication
-        } catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }
-        return new String[]{"First product"};
-    }
+    Observable<List<String>> getProducts();
 }

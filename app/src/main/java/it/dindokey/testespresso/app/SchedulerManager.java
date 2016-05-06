@@ -1,6 +1,5 @@
 package it.dindokey.testespresso.app;
 
-import rx.Observable;
 import rx.Scheduler;
 
 /**
@@ -9,20 +8,20 @@ import rx.Scheduler;
 public class SchedulerManager
 {
 
-    private Scheduler io;
+    private Scheduler computation;
     private Scheduler mainThread;
 
-    public SchedulerManager(Scheduler io, Scheduler mainThread)
+    public SchedulerManager(Scheduler computation, Scheduler mainThread)
     {
 
-        this.io = io;
+        this.computation = computation;
         this.mainThread = mainThread;
     }
 
 
-    public Scheduler io()
+    public Scheduler computation()
     {
-        return io;
+        return computation;
     }
 
     public Scheduler mainThread()

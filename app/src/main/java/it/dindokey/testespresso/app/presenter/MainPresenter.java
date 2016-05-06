@@ -1,15 +1,17 @@
 package it.dindokey.testespresso.app.presenter;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import it.dindokey.testespresso.app.ModelViewHolder;
+import it.dindokey.testespresso.app.ObservableCache;
 import it.dindokey.testespresso.app.SchedulerManager;
 import it.dindokey.testespresso.app.api.ProductsApiService;
 import it.dindokey.testespresso.app.model.ProductsModel;
-import it.dindokey.testespresso.app.view.MainView;
 import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Action1;
+import rx.Observer;
+import rx.Subscription;
 
 /**
  * Created by simone on 2/24/16.
@@ -17,66 +19,95 @@ import rx.functions.Action1;
 public class MainPresenter
 {
     private SchedulerManager schedulerManager;
-
+    private ObservableCache observableCache;
     private ProductsApiService productsApiService;
 
+    private Subscription subscription;
+    private Observer<List<String>> observer;
+
     @Inject
-    public MainPresenter(ProductsApiService productsApiService, SchedulerManager schedulerManager)
+    public MainPresenter(ProductsApiService productsApiService,
+                         SchedulerManager schedulerManager,
+                         ObservableCache observableCache)
     {
         this.productsApiService = productsApiService;
         this.schedulerManager = schedulerManager;
+        this.observableCache = observableCache;
     }
 
-    public void resume(final ModelViewHolder modelViewHolder)
+    public void resume(ModelViewHolder modelViewHolder)
     {
-        final ProductsModel productsModel = modelViewHolder.getModel();
-        final MainView view = modelViewHolder.getView();
-
-        if(null != productsModel)
+        observer = createObserver(modelViewHolder);
+        if (null != modelViewHolder.getModel())
         {
-            view.refreshProductList(productsModel.getItems());
+            modelViewHolder.getView().refreshProductList(modelViewHolder.getModel().getItems());
+        } else
+        {
+            loadData();
+            modelViewHolder.getView().showLoading();
         }
-        else
-        {
+    }
 
-            Observable<String[]> productsObservable = Observable.create(new Observable.OnSubscribe<String[]>()
+    public void loadData()
+    {
+        if (null == observableCache.observable())
+        {
+            observableCache.store(productsApiService
+                    .getProducts()
+                    .compose(this.<List<String>>applySchedulers())
+                    .replay());
+
+            observableCache.observable().connect();
+        }
+
+        subscription = observableCache.observable().subscribe(observer);
+    }
+
+    public void pause()
+    {
+        if (null != subscription)
+        {
+            subscription.unsubscribe();
+        }
+    }
+
+    private Observer<List<String>> createObserver(final ModelViewHolder modelViewHolder)
+    {
+        return new Observer<List<String>>()
+        {
+            @Override
+            public void onCompleted()
             {
-                @Override
-                public void call(Subscriber<? super String[]> subscriber)
-                {
-                    try
-                    {
-                        subscriber.onNext(productsApiService.getProducts());
-                    } catch (Exception e)
-                    {
-                        subscriber.onError(e);
-                    }
-                }
-            });
+                observableCache.clear();
+            }
 
-            productsObservable
-                    .subscribeOn(schedulerManager.io())
-                    .observeOn(schedulerManager.mainThread())
-                    .subscribe(new Action1<String[]>()
-                    {
-                        @Override
-                        public void call(String[] strings)  //success
-                        {
-                            ProductsModel productsModel = new ProductsModel();
-                            productsModel.setItems(strings);
-                            modelViewHolder.setModel(productsModel);
-                            view.refreshProductList(strings);
-                        }
-                    }, new Action1<Throwable>()
-                    {
-                        @Override
-                        public void call(Throwable throwable)   //error
-                        {
-                            view.showError();
-                        }
-                    });
+            @Override
+            public void onError(Throwable e)
+            {
+                modelViewHolder.getView().showError();
+            }
 
-            view.showLoading();
-        }
+            @Override
+            public void onNext(List<String> strings)
+            {
+                ProductsModel productsModel = new ProductsModel();
+                productsModel.setItems(strings);
+                modelViewHolder.setModel(productsModel);
+                modelViewHolder.getView().refreshProductList(strings);
+            }
+        };
+    }
+
+    <T> Observable.Transformer<T, T> applySchedulers()
+    {
+        return new Observable.Transformer<T, T>()
+        {
+            @Override
+            public Observable<T> call(Observable<T> observable)
+            {
+                return observable.subscribeOn(schedulerManager.computation())
+                        .observeOn(schedulerManager.mainThread());
+            }
+        };
     }
 }

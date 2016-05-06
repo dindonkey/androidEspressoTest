@@ -16,13 +16,25 @@ import rx.schedulers.Schedulers;
 @Module
 public class TestAppModule
 {
-    @Provides @Singleton ProductsApiService providesProductsApi()
+    @Provides
+    @Singleton
+    ProductsApiService providesProductsApi()
     {
         return Mockito.mock(ProductsApiService.class);
     }
 
-    @Provides @Singleton SchedulerManager providesSchedulerManager()
+    @Provides
+    @Singleton
+    SchedulerManager providesSchedulerManager()
     {
-        return new SchedulerManager(Schedulers.from(EspressoExecutor.getCachedThreadPool()), AndroidSchedulers.mainThread());
+        return new SchedulerManager(Schedulers.from(EspressoExecutor.getCachedThreadPool()),
+                AndroidSchedulers.mainThread());
+    }
+
+    @Provides
+    @Singleton
+    ObservableCache providesObservableCache()
+    {
+        return new ObservableCache();
     }
 }

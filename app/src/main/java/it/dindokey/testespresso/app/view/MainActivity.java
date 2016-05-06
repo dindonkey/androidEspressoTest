@@ -6,6 +6,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import it.dindokey.testespresso.app.App;
@@ -39,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements MainView
     }
 
     @Override
-    public void refreshProductList(String[] products)
+    public void refreshProductList(List<String> products)
     {
         productListViewAdapter.setValues(products);
         productListViewAdapter.reload();
@@ -48,14 +51,14 @@ public class MainActivity extends AppCompatActivity implements MainView
     @Override
     public void showLoading()
     {
-        productListViewAdapter.setValues(new String[]{getString(R.string.loading_message)});
+        productListViewAdapter.setValues(Arrays.asList(getString(R.string.loading_message)));
         productListViewAdapter.reload();
     }
 
     @Override
     public void showError()
     {
-        productListViewAdapter.setValues(new String[]{getString(R.string.error_message)});
+        productListViewAdapter.setValues(Arrays.asList(getString(R.string.error_message)));
         productListViewAdapter.reload();
     }
 
@@ -66,27 +69,9 @@ public class MainActivity extends AppCompatActivity implements MainView
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    protected void onPause()
     {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings)
-        {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        super.onPause();
+        mainPresenter.pause();
     }
 }

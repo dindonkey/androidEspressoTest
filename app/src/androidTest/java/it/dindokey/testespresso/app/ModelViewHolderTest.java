@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import it.dindokey.testespresso.app.model.ProductsModel;
 import it.dindokey.testespresso.app.view.MainView;
 
@@ -19,7 +21,7 @@ public class ModelViewHolderTest
     public void save_model_to_instance_state() throws Exception
     {
         ProductsModel testModel = new ProductsModel();
-        testModel.setItems(new String[]{"test product"});
+        testModel.setItems(Arrays.asList("test product"));
 
         Bundle savedInstanceState = new Bundle();
         ModelViewHolder modelViewHolder = new ModelViewHolder(mock(MainView.class),savedInstanceState);
