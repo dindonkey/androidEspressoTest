@@ -12,7 +12,6 @@ import it.dindokey.testespresso.app.SubscriberManager;
 import it.dindokey.testespresso.app.api.ProductsApiService;
 import it.dindokey.testespresso.app.model.ProductsModel;
 import it.dindokey.testespresso.app.view.MainView;
-import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
 
@@ -21,8 +20,6 @@ import rx.Subscription;
  */
 public class MainPresenter
 {
-    private SchedulerManager schedulerManager;
-    private ObservableCache observableCache;
     private SubscriberManager subscribeManager;
     private ProductsApiService productsApiService;
 
@@ -31,13 +28,9 @@ public class MainPresenter
 
     @Inject
     public MainPresenter(ProductsApiService productsApiService,
-                         SchedulerManager schedulerManager,
-                         ObservableCache observableCache,
                          SubscriberManager subscribeManager)
     {
         this.productsApiService = productsApiService;
-        this.schedulerManager = schedulerManager;
-        this.observableCache = observableCache;
         this.subscribeManager = subscribeManager;
     }
 
@@ -56,7 +49,10 @@ public class MainPresenter
 
     public void loadData()
     {
-        subscribeManager.subscribe();
+        subscribeManager.doSubscriptionWith(productsApiService.getProducts());
+
+
+
 //        if (null == observableCache.observable())
 //        {
 //            observableCache.store(productsApiService
@@ -67,15 +63,12 @@ public class MainPresenter
 //            observableCache.observable().connect();
 //        }
 //
-//        subscription = observableCache.observable().subscribe(observer);
+//        subscription = observableCache.observable().doSubscriptionWith(observer);
     }
 
     public void pause()
     {
-        if (null != subscription)
-        {
-            subscription.unsubscribe();
-        }
+        subscribeManager.doUnsubscribe();
     }
 
     private Observer<List<String>> createObserver(final ModelViewHolder modelViewHolder)
@@ -105,16 +98,5 @@ public class MainPresenter
         };
     }
 
-    <T> Observable.Transformer<T, T> applySchedulers()
-    {
-        return new Observable.Transformer<T, T>()
-        {
-            @Override
-            public Observable<T> call(Observable<T> observable)
-            {
-                return observable.subscribeOn(schedulerManager.computation())
-                        .observeOn(schedulerManager.mainThread());
-            }
-        };
-    }
+
 }
