@@ -4,11 +4,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import it.dindokey.testespresso.app.ModelCache;
 import it.dindokey.testespresso.app.ModelViewHolder;
 import it.dindokey.testespresso.app.ObservableCache;
 import it.dindokey.testespresso.app.SchedulerManager;
+import it.dindokey.testespresso.app.SubscriberManager;
 import it.dindokey.testespresso.app.api.ProductsApiService;
 import it.dindokey.testespresso.app.model.ProductsModel;
+import it.dindokey.testespresso.app.view.MainView;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
@@ -20,6 +23,7 @@ public class MainPresenter
 {
     private SchedulerManager schedulerManager;
     private ObservableCache observableCache;
+    private SubscriberManager subscribeManager;
     private ProductsApiService productsApiService;
 
     private Subscription subscription;
@@ -28,39 +32,42 @@ public class MainPresenter
     @Inject
     public MainPresenter(ProductsApiService productsApiService,
                          SchedulerManager schedulerManager,
-                         ObservableCache observableCache)
+                         ObservableCache observableCache,
+                         SubscriberManager subscribeManager)
     {
         this.productsApiService = productsApiService;
         this.schedulerManager = schedulerManager;
         this.observableCache = observableCache;
+        this.subscribeManager = subscribeManager;
     }
 
-    public void resume(ModelViewHolder modelViewHolder)
+    public void resume(MainView view, ModelCache modelCache)
     {
         observer = createObserver(modelViewHolder);
-        if (null != modelViewHolder.getModel())
+        if (null != modelCache.model())
         {
-            modelViewHolder.getView().refreshProductList(modelViewHolder.getModel().getItems());
+            view.refreshProductList(modelCache.model().getItems());
         } else
         {
             loadData();
-            modelViewHolder.getView().showLoading();
+            view.showLoading();
         }
     }
 
     public void loadData()
     {
-        if (null == observableCache.observable())
-        {
-            observableCache.store(productsApiService
-                    .getProducts()
-                    .compose(this.<List<String>>applySchedulers())
-                    .replay());
-
-            observableCache.observable().connect();
-        }
-
-        subscription = observableCache.observable().subscribe(observer);
+        subscribeManager.subscribe();
+//        if (null == observableCache.observable())
+//        {
+//            observableCache.store(productsApiService
+//                    .getProducts()
+//                    .compose(this.<List<String>>applySchedulers())
+//                    .replay());
+//
+//            observableCache.observable().connect();
+//        }
+//
+//        subscription = observableCache.observable().subscribe(observer);
     }
 
     public void pause()
