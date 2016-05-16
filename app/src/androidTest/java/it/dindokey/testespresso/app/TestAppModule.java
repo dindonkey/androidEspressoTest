@@ -7,6 +7,8 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import it.dindokey.testespresso.app.api.ProductsApiService;
+import it.dindokey.testespresso.app.cache.ObservableCache;
+import it.dindokey.testespresso.app.rx.SchedulerManager;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 

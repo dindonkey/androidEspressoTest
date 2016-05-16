@@ -7,6 +7,8 @@ import dagger.Provides;
 import it.dindokey.testespresso.app.api.HttpClient;
 import it.dindokey.testespresso.app.api.ProductsApiService;
 import it.dindokey.testespresso.app.api.SimpleProductsApiService;
+import it.dindokey.testespresso.app.cache.ObservableCache;
+import it.dindokey.testespresso.app.rx.SchedulerManager;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -18,7 +20,7 @@ public class AppModule
 {
     @Provides
     @Singleton
-    ProductsApiService providesProductsApi()
+    ProductsApiService providesProductsApiService()
     {
         return new SimpleProductsApiService(new HttpClient());
     }
@@ -36,4 +38,7 @@ public class AppModule
     {
         return new ObservableCache();
     }
+
+
+
 }

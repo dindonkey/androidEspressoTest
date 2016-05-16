@@ -1,4 +1,4 @@
-package it.dindokey.testespresso.app;
+package it.dindokey.testespresso.app.rx;
 
 import rx.Scheduler;
 

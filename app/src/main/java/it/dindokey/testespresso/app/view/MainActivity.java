@@ -2,8 +2,6 @@ package it.dindokey.testespresso.app.view;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ListView;
 
 import java.util.Arrays;
@@ -12,23 +10,31 @@ import java.util.List;
 import javax.inject.Inject;
 
 import it.dindokey.testespresso.app.App;
-import it.dindokey.testespresso.app.ModelViewHolder;
+import it.dindokey.testespresso.app.api.ProductsApiService;
+import it.dindokey.testespresso.app.cache.InstanceStateCache;
+import it.dindokey.testespresso.app.cache.ModelCache;
 import it.dindokey.testespresso.app.presenter.MainPresenter;
 import it.dindokey.testespresso.app.R;
+import it.dindokey.testespresso.app.rx.CacheObservableExecutor;
 
 public class MainActivity extends AppCompatActivity implements MainView
 {
     private ProductListViewAdapter productListViewAdapter;
 
-    @Inject MainPresenter mainPresenter;
-    private ModelViewHolder modelViewHolder;
+    @Inject
+    ProductsApiService productsApiService;
+    @Inject
+    CacheObservableExecutor observableExecutor;
+
+    MainPresenter mainPresenter;
+    ModelCache modelCache;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ((App)getApplication()).getComponent().inject(this);
+        ((App) getApplication()).getComponent().inject(this);
 
         ListView listView = (ListView) findViewById(R.id.list_view);
 
@@ -36,9 +42,10 @@ public class MainActivity extends AppCompatActivity implements MainView
                 android.R.layout.simple_list_item_1, android.R.id.text1);
         listView.setAdapter(productListViewAdapter);
 
+        modelCache = new InstanceStateCache(savedInstanceState);
+        mainPresenter = new MainPresenter(productsApiService, observableExecutor, modelCache);
         //TODO verify leak passing this
-        modelViewHolder = new ModelViewHolder(this, savedInstanceState);
-        mainPresenter.resume(modelViewHolder);
+        mainPresenter.resume(this);
     }
 
     @Override
@@ -65,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements MainView
     @Override
     protected void onSaveInstanceState(Bundle outState)
     {
-        modelViewHolder.saveInstanceState(outState);
+        modelCache.saveModelTo(outState);
     }
 
     @Override

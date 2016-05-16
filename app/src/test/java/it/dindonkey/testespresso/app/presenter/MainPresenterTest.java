@@ -11,9 +11,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.Arrays;
 import java.util.List;
 
-import it.dindokey.testespresso.app.ModelViewHolder;
-import it.dindokey.testespresso.app.ObservableCache;
-import it.dindokey.testespresso.app.SchedulerManager;
+import it.dindokey.testespresso.app.cache.ObservableCache;
+import it.dindokey.testespresso.app.rx.SchedulerManager;
 import it.dindokey.testespresso.app.api.HttpClient;
 import it.dindokey.testespresso.app.api.SimpleProductsApiService;
 import it.dindokey.testespresso.app.model.ProductsModel;

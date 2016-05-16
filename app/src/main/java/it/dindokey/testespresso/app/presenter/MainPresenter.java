@@ -1,45 +1,39 @@
 package it.dindokey.testespresso.app.presenter;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
-import it.dindokey.testespresso.app.ModelCache;
-import it.dindokey.testespresso.app.ModelViewHolder;
-import it.dindokey.testespresso.app.ObservableCache;
-import it.dindokey.testespresso.app.SchedulerManager;
-import it.dindokey.testespresso.app.SubscriberManager;
 import it.dindokey.testespresso.app.api.ProductsApiService;
-import it.dindokey.testespresso.app.model.ProductsModel;
+import it.dindokey.testespresso.app.cache.ModelCache;
+import it.dindokey.testespresso.app.rx.ObservableExecutor;
 import it.dindokey.testespresso.app.view.MainView;
-import rx.Observer;
-import rx.Subscription;
 
 /**
  * Created by simone on 2/24/16.
  */
 public class MainPresenter
 {
-    private SubscriberManager subscribeManager;
+    private ObservableExecutor observableExecutor;
+    private ModelCache modelCache;
     private ProductsApiService productsApiService;
+    private ProductsListSubscriber productsListSubscriber;
 
-    private Subscription subscription;
-    private Observer<List<String>> observer;
 
-    @Inject
     public MainPresenter(ProductsApiService productsApiService,
-                         SubscriberManager subscribeManager)
+                         ObservableExecutor observableExecutor,
+                         ModelCache modelCache)
     {
         this.productsApiService = productsApiService;
-        this.subscribeManager = subscribeManager;
+        this.observableExecutor = observableExecutor;
+        this.modelCache = modelCache;
     }
 
-    public void resume(MainView view, ModelCache modelCache)
+    public void resume(MainView view)
     {
-        observer = createObserver(modelViewHolder);
+        productsListSubscriber = new ProductsListSubscriber(view,
+                modelCache); //TODO: maybe it's possibile have a singleton with setView
+
         if (null != modelCache.model())
         {
-            view.refreshProductList(modelCache.model().getItems());
+            view.refreshProductList(modelCache.model()
+                    .getItems()); //TODO: refereshProductList should work with model
         } else
         {
             loadData();
@@ -49,54 +43,12 @@ public class MainPresenter
 
     public void loadData()
     {
-        subscribeManager.doSubscriptionWith(productsApiService.getProducts());
-
-
-
-//        if (null == observableCache.observable())
-//        {
-//            observableCache.store(productsApiService
-//                    .getProducts()
-//                    .compose(this.<List<String>>applySchedulers())
-//                    .replay());
-//
-//            observableCache.observable().connect();
-//        }
-//
-//        subscription = observableCache.observable().doSubscriptionWith(observer);
+        observableExecutor.execute(productsApiService.getProducts(), productsListSubscriber);
     }
 
     public void pause()
     {
-        subscribeManager.doUnsubscribe();
+        observableExecutor.unsubscribe();
     }
-
-    private Observer<List<String>> createObserver(final ModelViewHolder modelViewHolder)
-    {
-        return new Observer<List<String>>()
-        {
-            @Override
-            public void onCompleted()
-            {
-                observableCache.clear();
-            }
-
-            @Override
-            public void onError(Throwable e)
-            {
-                modelViewHolder.getView().showError();
-            }
-
-            @Override
-            public void onNext(List<String> strings)
-            {
-                ProductsModel productsModel = new ProductsModel();
-                productsModel.setItems(strings);
-                modelViewHolder.setModel(productsModel);
-                modelViewHolder.getView().refreshProductList(strings);
-            }
-        };
-    }
-
 
 }

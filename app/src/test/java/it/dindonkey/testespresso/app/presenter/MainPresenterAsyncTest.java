@@ -13,9 +13,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import it.dindokey.testespresso.app.ModelViewHolder;
-import it.dindokey.testespresso.app.ObservableCache;
-import it.dindokey.testespresso.app.SchedulerManager;
+import it.dindokey.testespresso.app.cache.ObservableCache;
+import it.dindokey.testespresso.app.rx.SchedulerManager;
 import it.dindokey.testespresso.app.api.ProductsApiService;
 import it.dindokey.testespresso.app.presenter.MainPresenter;
 import it.dindokey.testespresso.app.view.MainView;
