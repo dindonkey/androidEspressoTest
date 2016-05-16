@@ -13,14 +13,6 @@ public class InstanceStateCache implements ModelCache
 
     private ProductsModel model;
 
-    public InstanceStateCache(Bundle savedInstanceState)
-    {
-        if(null != savedInstanceState && null != savedInstanceState.getParcelable(MODEL))
-        {
-            model = savedInstanceState.getParcelable(MODEL);
-        }
-    }
-
     @Override
     public ProductsModel model()
     {
@@ -33,6 +25,15 @@ public class InstanceStateCache implements ModelCache
         model = productsModel;
 
 
+    }
+
+    @Override
+    public void initModelFrom(Bundle instanceState)
+    {
+        if(null != instanceState && null != instanceState.getParcelable(MODEL))
+        {
+            model = instanceState.getParcelable(MODEL);
+        }
     }
 
     @Override

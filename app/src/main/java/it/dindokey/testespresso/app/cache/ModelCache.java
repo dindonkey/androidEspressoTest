@@ -11,5 +11,6 @@ public interface ModelCache
 {
     ProductsModel model();
     void setModel(ProductsModel productsModel);
+    void initModelFrom(Bundle instanceState);
     void saveModelTo(Bundle instanceState);
 }

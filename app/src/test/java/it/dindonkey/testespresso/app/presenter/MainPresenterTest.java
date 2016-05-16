@@ -116,7 +116,7 @@ public class MainPresenterTest extends AppTestCase
         List<String> freshData = Arrays.asList("fresh data");
         when(httpClientMock.get()).thenReturn(freshData);
 
-        presenter.loadData(); //e.g. reload button or pull to refresh
+        presenter.loadData(view); //e.g. reload button or pull to refresh
 
         verify(anotheMainViewMock).refreshProductList(freshData);
     }

@@ -13,8 +13,6 @@ public class MainPresenter
     private ObservableExecutor observableExecutor;
     private ModelCache modelCache;
     private ProductsApiService productsApiService;
-    private ProductsListSubscriber productsListSubscriber;
-
 
     public MainPresenter(ProductsApiService productsApiService,
                          ObservableExecutor observableExecutor,
@@ -27,22 +25,21 @@ public class MainPresenter
 
     public void resume(MainView view)
     {
-        productsListSubscriber = new ProductsListSubscriber(view,
-                modelCache); //TODO: maybe it's possibile have a singleton with setView
-
         if (null != modelCache.model())
         {
             view.refreshProductList(modelCache.model()
                     .getItems()); //TODO: refereshProductList should work with model
         } else
         {
-            loadData();
+            loadData(view);
             view.showLoading();
         }
     }
 
-    public void loadData()
+    public void loadData(MainView view)
     {
+        ProductsListSubscriber productsListSubscriber = new ProductsListSubscriber(view,
+                modelCache);
         observableExecutor.execute(productsApiService.getProducts(), productsListSubscriber);
     }
 
