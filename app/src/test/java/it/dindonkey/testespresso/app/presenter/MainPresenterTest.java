@@ -8,24 +8,19 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Arrays;
-import java.util.List;
-
-import it.dindokey.testespresso.app.cache.ObservableCache;
-import it.dindokey.testespresso.app.rx.SchedulerManager;
-import it.dindokey.testespresso.app.api.HttpClient;
-import it.dindokey.testespresso.app.api.SimpleProductsApiService;
+import it.dindokey.testespresso.app.api.ProductsApiService;
+import it.dindokey.testespresso.app.cache.ModelCache;
 import it.dindokey.testespresso.app.model.ProductsModel;
 import it.dindokey.testespresso.app.presenter.MainPresenter;
+import it.dindokey.testespresso.app.rx.ObservableExecutor;
 import it.dindokey.testespresso.app.view.MainView;
 import it.dindonkey.testespresso.app.AppTestCase;
-import rx.schedulers.Schedulers;
+import rx.Observer;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 /**
@@ -35,91 +30,65 @@ import static org.mockito.Mockito.when;
 public class MainPresenterTest extends AppTestCase
 {
     @Mock
-    HttpClient httpClientMock;
-    @Mock
-    MainView mockedMainView;
+    MainView mainViewMock;
     @Mock
     Bundle savedInstanceStateMock;
+    @Mock
+    ModelCache modelCacheMock;
+    @Mock
+    ObservableExecutor observableExecutorMock;
+    @Mock
+    ProductsApiService productsApiServiceMock;
 
     private MainPresenter presenter;
-    private List<String> sampleProducts;
-    private ModelViewHolder modelViewHolderMock;
-    private SchedulerManager schedulerManager;
 
     @Before
     public void setup() throws Exception
     {
-        schedulerManager = new SchedulerManager(Schedulers.immediate(),
-                Schedulers.immediate());
-        presenter = new MainPresenter(new SimpleProductsApiService(httpClientMock),
-                schedulerManager, new ObservableCache());
-
-        sampleProducts = Arrays.asList("test product");
-        modelViewHolderMock = new ModelViewHolder(mockedMainView, savedInstanceStateMock);
-        when(httpClientMock.get()).thenReturn(sampleProducts);
+        presenter = new MainPresenter(productsApiServiceMock,
+                observableExecutorMock, modelCacheMock);
     }
 
     @Test
-    public void load_products_on_resume() throws Exception
+    public void should_execute_get_products_and_show_loading_on_resume() throws Exception
     {
-        presenter.resume(modelViewHolderMock);
-        verify(httpClientMock).get();
-        verify(mockedMainView).refreshProductList(sampleProducts);
+        presenter.resume(mainViewMock);
+
+        verify(observableExecutorMock).execute(eq(productsApiServiceMock.getProducts()),
+                any(Observer.class));
+        verify(mainViewMock).showLoading();
     }
 
     @Test
-    public void retain_model_after_first_load() throws Exception
+    public void should_not_execute_get_products_and_refresh_products_list_if_model_is_cached() throws Exception
     {
-        presenter.resume(modelViewHolderMock);
-        presenter.resume(modelViewHolderMock);
-        verify(httpClientMock, times(1)).get();
+        ProductsModel model = new ProductsModel();
+        model.setItems(sampleProducts);
+        when(modelCacheMock.model()).thenReturn(model);
+
+        presenter.resume(mainViewMock);
+
+        verify(mainViewMock).refreshProductList(sampleProducts);
+        verifyZeroInteractions(observableExecutorMock);
     }
 
-    @Test
-    public void load_model_from_saved_instance_state_and_update_view() throws Exception
-    {
-        putTestModelIntoInstanceState();
 
-        ModelViewHolder modelViewHolderMock = new ModelViewHolder(mockedMainView,
-                savedInstanceStateMock);
-        presenter.resume(modelViewHolderMock);
-
-        verifyNoMoreInteractions(httpClientMock);
-        verify(mockedMainView).refreshProductList(sampleProducts);
-    }
-
-    @Test
-    public void call_show_loading_while_fetching_data() throws Exception
-    {
-        presenter.resume(modelViewHolderMock);
-        verify(mockedMainView).showLoading();
-    }
-
-    @Test
-    public void call_show_error_if_occours() throws Exception
-    {
-        when(httpClientMock.get()).thenThrow(new RuntimeException());
-        presenter.resume(modelViewHolderMock);
-        verify(mockedMainView).showError();
-
-    }
-
-    @Test
-    public void refresh_data() throws Exception
-    {
-        //e.g. a previous request was done and was completed, UI triggers refresh data, we need to reload data
-        presenter.resume(modelViewHolderMock); // first request
-
-        MainView anotheMainViewMock = mock(MainView.class);
-        modelViewHolderMock.setView(anotheMainViewMock);
-
-        List<String> freshData = Arrays.asList("fresh data");
-        when(httpClientMock.get()).thenReturn(freshData);
-
-        presenter.loadData(view); //e.g. reload button or pull to refresh
-
-        verify(anotheMainViewMock).refreshProductList(freshData);
-    }
+//    @Test
+//    public void refresh_data() throws Exception
+//    {
+//        //e.g. a previous request was done and was completed, UI triggers refresh data, we need to reload data
+//        presenter.resume(modelViewHolderMock); // first request
+//
+//        MainView anotheMainViewMock = mock(MainView.class);
+//        modelViewHolderMock.setView(anotheMainViewMock);
+//
+//        List<String> freshData = Arrays.asList("fresh data");
+//        when(httpClientMock.get()).thenReturn(freshData);
+//
+//        presenter.loadData(view); //e.g. reload button or pull to refresh
+//
+//        verify(anotheMainViewMock).refreshProductList(freshData);
+//    }
 
 
 //    @Test
@@ -139,12 +108,5 @@ public class MainPresenterTest extends AppTestCase
 //
 //        testSubscriber.assertUnsubscribed();
 //    }
-
-    private void putTestModelIntoInstanceState()
-    {
-        ProductsModel model = new ProductsModel();
-        model.setItems(sampleProducts);
-        when(savedInstanceStateMock.getParcelable(anyString())).thenReturn(model);
-    }
 
 }

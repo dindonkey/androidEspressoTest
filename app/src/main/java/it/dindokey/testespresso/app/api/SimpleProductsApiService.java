@@ -14,7 +14,6 @@ public class SimpleProductsApiService implements ProductsApiService
 
     public SimpleProductsApiService(HttpClient httpClient)
     {
-
         this.httpClient = httpClient;
     }
 
