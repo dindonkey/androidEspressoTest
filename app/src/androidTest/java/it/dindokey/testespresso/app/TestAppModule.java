@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import it.dindokey.testespresso.app.api.ProductsApiService;
+import it.dindokey.testespresso.app.cache.InstanceStateCache;
 import it.dindokey.testespresso.app.cache.ObservableCache;
 import it.dindokey.testespresso.app.rx.SchedulerManager;
 import rx.android.schedulers.AndroidSchedulers;
@@ -38,5 +39,12 @@ public class TestAppModule
     ObservableCache providesObservableCache()
     {
         return new ObservableCache();
+    }
+
+    @Provides
+    @Singleton
+    InstanceStateCache providesInstanceStateCache()
+    {
+        return new InstanceStateCache();
     }
 }

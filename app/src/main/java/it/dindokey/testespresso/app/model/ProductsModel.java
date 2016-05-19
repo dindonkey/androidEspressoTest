@@ -17,6 +17,11 @@ public class ProductsModel implements Parcelable
         items = new ArrayList<String>();
     }
 
+    public ProductsModel(List<String> items)
+    {
+        this.items = items;
+    }
+
     protected ProductsModel(Parcel in)
     {
         items = in.createStringArrayList();
