@@ -9,6 +9,7 @@ import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
 import rx.functions.Action0;
+import rx.observables.ConnectableObservable;
 
 /**
  * Created by simone on 5/6/16.
@@ -27,7 +28,7 @@ public class CacheObservableExecutor implements ObservableExecutor
     }
 
     @Override
-    public void execute(Observable observable, final Observer observer)
+    public void execute(Observable observable, Observer observer)
     {
         if (null == observableCache.observable())
         {

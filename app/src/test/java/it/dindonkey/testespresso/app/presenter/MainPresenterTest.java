@@ -72,8 +72,14 @@ public class MainPresenterTest extends AppTestCase
         verifyZeroInteractions(observableExecutorMock);
     }
 
+    @Test
+    public void should_unsubscribe_subcription_on_pause() throws Exception
+    {
+        presenter.pause();
+        verify(observableExecutorMock).unsubscribe();
+    }
 
-//    @Test
+    //    @Test
 //    public void refresh_data() throws Exception
 //    {
 //        //e.g. a previous request was done and was completed, UI triggers refresh data, we need to reload data
