@@ -24,6 +24,7 @@ public class CacheObservableExecutor implements ObservableExecutor
         this.schedulerManager = schedulerManager;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void execute(Observable observable, Observer observer)
     {

@@ -43,6 +43,7 @@ public class MainActivityTest extends AppTestCase
     @Inject
     ProductsApiService mockedProductsApiService;
 
+    @SuppressWarnings("unchecked")
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule(MainActivity.class,
             true,
