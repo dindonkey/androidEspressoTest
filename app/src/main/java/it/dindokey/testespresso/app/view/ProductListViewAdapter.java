@@ -13,9 +13,9 @@ public class ProductListViewAdapter extends ArrayAdapter<String>
 {
     private List<String> values = new ArrayList<String>();
 
-    public ProductListViewAdapter(Context context, int resource, int textViewResourceId)
+    public ProductListViewAdapter(Context context)
     {
-        super(context, resource, textViewResourceId);
+        super(context, android.R.layout.simple_list_item_1, android.R.id.text1);
         addAll(values);
     }
 

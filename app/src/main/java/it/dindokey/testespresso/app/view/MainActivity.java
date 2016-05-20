@@ -38,8 +38,8 @@ public class MainActivity extends AppCompatActivity implements MainView
 
         ListView listView = (ListView) findViewById(R.id.list_view);
 
-        productListViewAdapter = new ProductListViewAdapter(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1);
+        productListViewAdapter = new ProductListViewAdapter(this
+        );
         listView.setAdapter(productListViewAdapter);
 
         instanceStateCache.initModelFrom(savedInstanceState);
