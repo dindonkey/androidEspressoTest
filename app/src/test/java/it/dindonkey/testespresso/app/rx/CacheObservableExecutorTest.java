@@ -1,7 +1,6 @@
 package it.dindonkey.testespresso.app.rx;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -11,10 +10,13 @@ import it.dindokey.testespresso.app.cache.ObservableCache;
 import it.dindokey.testespresso.app.rx.CacheObservableExecutor;
 import it.dindokey.testespresso.app.rx.SchedulerManager;
 import rx.Observable;
+import rx.Subscriber;
 import rx.observers.TestSubscriber;
 import rx.schedulers.Schedulers;
 
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by simone on 5/17/16.
@@ -24,25 +26,61 @@ public class CacheObservableExecutorTest
 {
     @Mock
     ObservableCache observableCacheMock;
+    @Mock
+    FakeTask fakeTaskMock;
 
     private CacheObservableExecutor cacheObservableExecutor;
+    private TestSubscriber testSubscriber;
+    private Observable testObservable;
 
     @Before
     public void setUp() throws Exception
     {
         SchedulerManager schedulerManager = new SchedulerManager(Schedulers.immediate(),Schedulers.immediate());
         cacheObservableExecutor = new CacheObservableExecutor(observableCacheMock, schedulerManager);
+        testObservable = createTestObservable();
+        testSubscriber = new TestSubscriber();
     }
 
-    @Ignore
     @Test
-    public void should_() throws Exception
+    public void should_execute_observable_call() throws Exception
     {
-        Observable testObservable = Observable.empty();
-        TestSubscriber testSubscriber = new TestSubscriber();
-
         cacheObservableExecutor.execute(testObservable, testSubscriber);
-//        verify(testObservable).connect
-        verify(testObservable).subscribe(testSubscriber);
+        verify(fakeTaskMock).doSomething();
     }
+
+    @Test
+    public void should_not_execute_observer_call_if_cached() throws Exception
+    {
+        when(observableCacheMock.observable()).thenReturn(testObservable.replay());
+        cacheObservableExecutor.execute(testObservable, testSubscriber);
+        verifyNoMoreInteractions(fakeTaskMock);
+    }
+
+    @Test
+    public void should_unsubscribe_observer() throws Exception
+    {
+        cacheObservableExecutor.execute(testObservable, testSubscriber);
+        cacheObservableExecutor.unsubscribe();
+
+        testSubscriber.assertUnsubscribed();
+    }
+
+    private Observable createTestObservable()
+    {
+        return Observable.create(new Observable.OnSubscribe<Void>()
+        {
+            @Override
+            public void call(Subscriber<? super Void> subscriber)
+            {
+                fakeTaskMock.doSomething();
+            }
+        });
+    }
+
+    class FakeTask
+    {
+        public void doSomething() {}
+    }
+
 }

@@ -2,6 +2,8 @@ package it.dindokey.testespresso.app.rx;
 
 import android.support.annotation.NonNull;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import it.dindokey.testespresso.app.cache.ObservableCache;
@@ -16,9 +18,9 @@ import rx.observables.ConnectableObservable;
  */
 public class CacheObservableExecutor implements ObservableExecutor
 {
-    private ObservableCache observableCache;
     private SchedulerManager schedulerManager;
     private Subscription subscription;
+    private ObservableCache observableCache;
 
     @Inject
     public CacheObservableExecutor(ObservableCache observableCache, SchedulerManager schedulerManager)
@@ -30,18 +32,21 @@ public class CacheObservableExecutor implements ObservableExecutor
     @Override
     public void execute(Observable observable, Observer observer)
     {
-        if (null == observableCache.observable())
+        ConnectableObservable<List<String>> connectableObservable = observableCache.observable();
+
+        if (null == connectableObservable)
         {
-            observableCache.store(observable
+            connectableObservable =  observable
                     .doOnCompleted(clearObservableCache())
                     .subscribeOn(schedulerManager.computation())
                     .observeOn(schedulerManager.mainThread())
-                    .replay());
+                    .replay();
 
-            observableCache.observable().connect();
+            observableCache.store(connectableObservable);
+            connectableObservable.connect();
         }
 
-        subscription = observableCache.observable().subscribe(observer);
+        subscription = connectableObservable.subscribe(observer);
     }
 
     @NonNull
