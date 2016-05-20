@@ -12,10 +12,10 @@ import static rx.Observable.just;
 /**
  * Created by simone on 5/2/16.
  */
-public class AppTestCase
+class AppTestCase
 {
-    protected List<String> sampleProducts = Arrays.asList("test product");
-    protected TestScheduler _God_scheduler = new TestScheduler();
+    private List<String> sampleProducts = Arrays.asList("test product");
+    private TestScheduler _God_scheduler = new TestScheduler();
 
     @NonNull
     protected Observable<List<String>> delayedProductsObservable()
