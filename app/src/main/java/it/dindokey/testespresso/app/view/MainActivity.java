@@ -36,12 +36,14 @@ public class MainActivity extends AppCompatActivity implements MainView
         setContentView(R.layout.activity_main);
         ((App) getApplication()).getComponent().inject(this);
 
-        ListView listView = (ListView) findViewById(R.id.list_view);
-
         productListViewAdapter = new ProductListViewAdapter(this
         );
-        listView.setAdapter(productListViewAdapter);
 
+        ListView listView = (ListView) findViewById(R.id.list_view);
+        if (null != listView)
+        {
+            listView.setAdapter(productListViewAdapter);
+        }
         instanceStateCache.initModelFrom(savedInstanceState);
         mainPresenter = new MainPresenter(productsApiService, observableExecutor,
                 instanceStateCache);
