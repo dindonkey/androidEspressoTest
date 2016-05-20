@@ -10,6 +10,7 @@ import it.dindonkey.testespresso.app.AppTestCase;
 
 import static org.junit.Assert.assertEquals;
 
+@SuppressWarnings("unused")
 public class InstanceStateCacheTest extends AppTestCase
 {
 

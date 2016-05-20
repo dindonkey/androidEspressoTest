@@ -18,6 +18,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("unused")
 @RunWith(MockitoJUnitRunner.class)
 public class CacheObservableExecutorTest
 {

@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import it.dindokey.testespresso.app.model.ProductsModel;
 
+@SuppressWarnings("unused")
 public interface ModelCache
 {
     ProductsModel model();

@@ -11,6 +11,7 @@ import rx.schedulers.TestScheduler;
 
 import static rx.Observable.just;
 
+@SuppressWarnings("unused")
 public class AppTestCase
 {
     protected final List<String> sampleProducts = Arrays.asList("test product");

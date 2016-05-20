@@ -35,6 +35,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("unused")
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class MainActivityTest extends AppTestCase

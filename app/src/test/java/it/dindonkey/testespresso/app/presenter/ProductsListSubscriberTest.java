@@ -16,6 +16,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+@SuppressWarnings("unused")
 @RunWith(MockitoJUnitRunner.class)
 public class ProductsListSubscriberTest extends AppTestCase
 {
