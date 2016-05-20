@@ -2,8 +2,6 @@ package it.dindokey.testespresso.app.rx;
 
 import android.support.annotation.NonNull;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import it.dindokey.testespresso.app.cache.ObservableCache;

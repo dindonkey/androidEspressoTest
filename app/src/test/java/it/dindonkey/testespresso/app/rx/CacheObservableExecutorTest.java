@@ -34,8 +34,10 @@ public class CacheObservableExecutorTest
     @Before
     public void setUp()
     {
-        SchedulerManager schedulerManager = new SchedulerManager(Schedulers.immediate(),Schedulers.immediate());
-        cacheObservableExecutor = new CacheObservableExecutor(observableCacheMock, schedulerManager);
+        SchedulerManager schedulerManager = new SchedulerManager(Schedulers.immediate(),
+                Schedulers.immediate());
+        cacheObservableExecutor = new CacheObservableExecutor(observableCacheMock,
+                schedulerManager);
         testObservable = createTestObservable();
         testSubscriber = new TestSubscriber();
     }
@@ -78,7 +80,10 @@ public class CacheObservableExecutorTest
 
     class FakeTask
     {
-        public void doSomething() {}
+        public void doSomething()
+        {
+            System.out.println("duh");
+        }
     }
 
 }
