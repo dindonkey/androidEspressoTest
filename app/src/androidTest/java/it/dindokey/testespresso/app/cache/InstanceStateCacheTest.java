@@ -21,7 +21,7 @@ public class InstanceStateCacheTest extends AppTestCase
     private Bundle testInstanceState;
 
     @Before
-    public void setUp() throws Exception
+    public void setUp()
     {
         instanceStateCache = new InstanceStateCache();
         productsModel = new ProductsModel(sampleProducts);
@@ -30,7 +30,7 @@ public class InstanceStateCacheTest extends AppTestCase
 
 
     @Test
-    public void should_save_model_to_instance_state() throws Exception
+    public void should_save_model_to_instance_state()
     {
         instanceStateCache.setModel(productsModel);
         instanceStateCache.saveModelTo(testInstanceState);
@@ -39,7 +39,7 @@ public class InstanceStateCacheTest extends AppTestCase
     }
 
     @Test
-    public void should_init_model_from_instance_state() throws Exception
+    public void should_init_model_from_instance_state()
     {
         testInstanceState.putParcelable(InstanceStateCache.MODEL,productsModel);
 

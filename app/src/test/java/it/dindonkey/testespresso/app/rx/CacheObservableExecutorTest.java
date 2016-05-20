@@ -34,7 +34,7 @@ public class CacheObservableExecutorTest
     private Observable testObservable;
 
     @Before
-    public void setUp() throws Exception
+    public void setUp()
     {
         SchedulerManager schedulerManager = new SchedulerManager(Schedulers.immediate(),Schedulers.immediate());
         cacheObservableExecutor = new CacheObservableExecutor(observableCacheMock, schedulerManager);
@@ -43,14 +43,14 @@ public class CacheObservableExecutorTest
     }
 
     @Test
-    public void should_execute_observable_call() throws Exception
+    public void should_execute_observable_call()
     {
         cacheObservableExecutor.execute(testObservable, testSubscriber);
         verify(fakeTaskMock).doSomething();
     }
 
     @Test
-    public void should_not_execute_observer_call_if_cached() throws Exception
+    public void should_not_execute_observer_call_if_cached()
     {
         when(observableCacheMock.observable()).thenReturn(testObservable.replay());
         cacheObservableExecutor.execute(testObservable, testSubscriber);
@@ -58,7 +58,7 @@ public class CacheObservableExecutorTest
     }
 
     @Test
-    public void should_unsubscribe_observer() throws Exception
+    public void should_unsubscribe_observer()
     {
         cacheObservableExecutor.execute(testObservable, testSubscriber);
         cacheObservableExecutor.unsubscribe();

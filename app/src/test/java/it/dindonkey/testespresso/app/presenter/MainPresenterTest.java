@@ -43,14 +43,14 @@ public class MainPresenterTest extends AppTestCase
     private MainPresenter presenter;
 
     @Before
-    public void setup() throws Exception
+    public void setup()
     {
         presenter = new MainPresenter(productsApiServiceMock,
                 observableExecutorMock, modelCacheMock);
     }
 
     @Test
-    public void should_execute_get_products_and_show_loading_on_resume() throws Exception
+    public void should_execute_get_products_and_show_loading_on_resume()
     {
         presenter.resume(mainViewMock);
 
@@ -60,7 +60,7 @@ public class MainPresenterTest extends AppTestCase
     }
 
     @Test
-    public void should_not_execute_get_products_and_refresh_products_list_if_model_is_cached() throws Exception
+    public void should_not_execute_get_products_and_refresh_products_list_if_model_is_cached()
     {
         ProductsModel model = new ProductsModel();
         model.setItems(sampleProducts);
@@ -73,7 +73,7 @@ public class MainPresenterTest extends AppTestCase
     }
 
     @Test
-    public void should_unsubscribe_subcription_on_pause() throws Exception
+    public void should_unsubscribe_subcription_on_pause()
     {
         presenter.pause();
         verify(observableExecutorMock).unsubscribe();

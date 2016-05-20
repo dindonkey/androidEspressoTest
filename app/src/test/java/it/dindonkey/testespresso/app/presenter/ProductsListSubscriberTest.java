@@ -30,27 +30,27 @@ public class ProductsListSubscriberTest extends AppTestCase
     private ProductsListSubscriber productsListSubscriber;
 
     @Before
-    public void setUp() throws Exception
+    public void setUp()
     {
         productsListSubscriber = new ProductsListSubscriber(mainViewMock, modelCacheMock);
     }
 
     @Test
-    public void should_refresh_list_on_request_success() throws Exception
+    public void should_refresh_list_on_request_success()
     {
         productsListSubscriber.onNext(sampleProducts);
         verify(mainViewMock).refreshProductList(sampleProducts);
     }
 
     @Test
-    public void should_save_model_to_cache_on_request_success() throws Exception
+    public void should_save_model_to_cache_on_request_success()
     {
         productsListSubscriber.onNext(sampleProducts);
         verify(modelCacheMock).setModel(any(ProductsModel.class)); //TODO: ProductsModel should be refactored asap
     }
 
     @Test
-    public void should_notify_view_if_an_error_occours() throws Exception
+    public void should_notify_view_if_an_error_occours()
     {
         productsListSubscriber.onError(mock(Throwable.class));
         verify(mainViewMock).showError();

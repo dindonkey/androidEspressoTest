@@ -74,7 +74,7 @@ public class MainActivityTest extends AppTestCase
     }
 
     @Test
-    public void show_product_list() throws Exception
+    public void show_product_list()
     {
         when(mockedProductsApiService.getProducts()).thenReturn(testProductsObservable());
 
@@ -85,7 +85,7 @@ public class MainActivityTest extends AppTestCase
     }
 
     @Test
-    public void retain_products_on_rotation() throws Exception
+    public void retain_products_on_rotation()
     {
         when(mockedProductsApiService.getProducts()).thenReturn(testProductsObservable());
 
@@ -98,7 +98,7 @@ public class MainActivityTest extends AppTestCase
     }
 
     @Test
-    public void refresh_product_list() throws Exception
+    public void refresh_product_list()
     {
         mActivityRule.launchActivity(new Intent());
         mActivityRule.getActivity().runOnUiThread(new Runnable()
@@ -114,7 +114,7 @@ public class MainActivityTest extends AppTestCase
     }
 
     @Test
-    public void show_loading_message() throws Exception
+    public void show_loading_message()
     {
         mActivityRule.launchActivity(new Intent());
         mActivityRule.getActivity().runOnUiThread(new Runnable()
@@ -131,7 +131,7 @@ public class MainActivityTest extends AppTestCase
     }
 
     @Test
-    public void show_load_error_message() throws Exception
+    public void show_load_error_message()
     {
         mActivityRule.launchActivity(new Intent());
         mActivityRule.getActivity().runOnUiThread(new Runnable()
@@ -148,7 +148,7 @@ public class MainActivityTest extends AppTestCase
     }
 
     @Test
-    public void show_load_error_if_occours() throws Exception
+    public void show_load_error_if_occours()
     {
         when(mockedProductsApiService.getProducts()).thenReturn(brokenProductsObservable());
         mActivityRule.launchActivity(new Intent());
@@ -170,7 +170,7 @@ public class MainActivityTest extends AppTestCase
 
 
     @After
-    public void tearDown() throws Exception
+    public void tearDown()
     {
         mActivityRule.getActivity().finish();
     }
