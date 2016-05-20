@@ -32,7 +32,7 @@ public class CacheObservableExecutor implements ObservableExecutor
     @Override
     public void execute(Observable observable, Observer observer)
     {
-        ConnectableObservable<List<String>> connectableObservable = observableCache.observable();
+        ConnectableObservable connectableObservable = observableCache.observable();
 
         if (null == connectableObservable)
         {

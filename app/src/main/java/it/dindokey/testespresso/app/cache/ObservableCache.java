@@ -1,7 +1,5 @@
 package it.dindokey.testespresso.app.cache;
 
-import java.util.List;
-
 import rx.observables.ConnectableObservable;
 
 /**
@@ -9,14 +7,14 @@ import rx.observables.ConnectableObservable;
  */
 public class ObservableCache
 {
-    private ConnectableObservable<List<String>> observable;
+    private ConnectableObservable observable;
 
-    public ConnectableObservable<List<String>> observable()
+    public ConnectableObservable observable()
     {
         return observable;
     }
 
-    public void store(ConnectableObservable<List<String>> observable)
+    public void store(ConnectableObservable observable)
     {
         this.observable = observable;
     }
