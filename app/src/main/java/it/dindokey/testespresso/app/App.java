@@ -2,6 +2,8 @@ package it.dindokey.testespresso.app;
 
 import android.app.Application;
 
+import com.squareup.leakcanary.LeakCanary;
+
 
 public class App extends Application
 {
@@ -14,6 +16,11 @@ public class App extends Application
         component = DaggerAppComponent.builder()
                 .appModule(new AppModule())
                 .build();
+
+        if(BuildConfig.DEBUG)
+        {
+            LeakCanary.install(this);
+        }
     }
 
     public AppComponent getComponent()

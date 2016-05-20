@@ -9,7 +9,7 @@ import rx.Observer;
 
 public class ProductsListSubscriber implements Observer<List<String>>
 {
-    private final MainView view;
+    private MainView view;
     private final ModelCache modelCache;
 
     public ProductsListSubscriber(MainView view, ModelCache modelCache)
@@ -36,5 +36,10 @@ public class ProductsListSubscriber implements Observer<List<String>>
         productsModel.setItems(strings);
         modelCache.setModel(productsModel);
         view.refreshProductList(strings);
+    }
+
+    public void unBindView()
+    {
+        view = null;
     }
 }

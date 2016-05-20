@@ -10,6 +10,7 @@ public class MainPresenter
     private final ObservableExecutor observableExecutor;
     private final ModelCache modelCache;
     private final ProductsApiService productsApiService;
+    private ProductsListSubscriber productsListSubscriber;
 
     public MainPresenter(ProductsApiService productsApiService,
                          ObservableExecutor observableExecutor,
@@ -35,7 +36,7 @@ public class MainPresenter
 
     private void loadData(MainView view)
     {
-        ProductsListSubscriber productsListSubscriber = new ProductsListSubscriber(view,
+        productsListSubscriber = new ProductsListSubscriber(view,
                 modelCache);
         observableExecutor.execute(productsApiService.getProducts(), productsListSubscriber);
     }
@@ -43,6 +44,10 @@ public class MainPresenter
     public void pause()
     {
         observableExecutor.unsubscribe();
+        if(null != productsListSubscriber)
+        {
+            productsListSubscriber.unBindView();
+        }
     }
 
 }
