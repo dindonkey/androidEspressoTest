@@ -16,7 +16,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 import javax.inject.Inject;
 
@@ -105,7 +105,8 @@ public class MainActivityTest extends AppTestCase
             @Override
             public void run()
             {
-                mActivityRule.getActivity().refreshProductList(Arrays.asList("test product"));
+                mActivityRule.getActivity().refreshProductList(Collections.singletonList(
+                        "test product"));
             }
         });
 

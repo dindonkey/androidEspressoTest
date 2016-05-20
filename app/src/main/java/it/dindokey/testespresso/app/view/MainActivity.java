@@ -4,16 +4,16 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import it.dindokey.testespresso.app.App;
+import it.dindokey.testespresso.app.R;
 import it.dindokey.testespresso.app.api.ProductsApiService;
 import it.dindokey.testespresso.app.cache.InstanceStateCache;
 import it.dindokey.testespresso.app.presenter.MainPresenter;
-import it.dindokey.testespresso.app.R;
 import it.dindokey.testespresso.app.rx.CacheObservableExecutor;
 
 public class MainActivity extends AppCompatActivity implements MainView
@@ -59,14 +59,14 @@ public class MainActivity extends AppCompatActivity implements MainView
     @Override
     public void showLoading()
     {
-        productListViewAdapter.setValues(Arrays.asList(getString(R.string.loading_message)));
+        productListViewAdapter.setValues(Collections.singletonList(getString(R.string.loading_message)));
         productListViewAdapter.reload();
     }
 
     @Override
     public void showError()
     {
-        productListViewAdapter.setValues(Arrays.asList(getString(R.string.error_message)));
+        productListViewAdapter.setValues(Collections.singletonList(getString(R.string.error_message)));
         productListViewAdapter.reload();
     }
 

@@ -1,6 +1,6 @@
 package it.dindonkey.testespresso.app;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -14,7 +14,7 @@ import static rx.Observable.just;
 @SuppressWarnings("unused")
 public class AppTestCase
 {
-    protected final List<String> sampleProducts = Arrays.asList("test product");
+    protected final List<String> sampleProducts = Collections.singletonList("test product");
     private final TestScheduler _God_scheduler = new TestScheduler();
 
     protected Observable<List<String>> delayedProductsObservable()
