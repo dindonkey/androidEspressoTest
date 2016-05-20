@@ -36,7 +36,7 @@ public class MainPresenter
         }
     }
 
-    public void loadData(MainView view)
+    private void loadData(MainView view)
     {
         ProductsListSubscriber productsListSubscriber = new ProductsListSubscriber(view,
                 modelCache);

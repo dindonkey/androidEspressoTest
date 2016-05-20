@@ -19,7 +19,7 @@ public class EspressoExecutor extends ThreadPoolExecutor implements IdlingResour
 
     private static EspressoExecutor singleton;
 
-    public EspressoExecutor(BlockingQueue<Runnable> workQueue) {
+    private EspressoExecutor(BlockingQueue<Runnable> workQueue) {
         super(0, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, workQueue);
     }
 

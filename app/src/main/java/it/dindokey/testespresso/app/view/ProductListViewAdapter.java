@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by simone on 2/3/16.
  */
-public class ProductListViewAdapter extends ArrayAdapter<String>
+class ProductListViewAdapter extends ArrayAdapter<String>
 {
     private List<String> values = new ArrayList<String>();
 

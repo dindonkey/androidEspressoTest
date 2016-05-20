@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements MainView
     @Inject
     InstanceStateCache instanceStateCache;
 
-    MainPresenter mainPresenter;
+    private MainPresenter mainPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
