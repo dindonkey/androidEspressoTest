@@ -2,7 +2,6 @@
     <string name="app_name">testespresso</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
     <string name="loading_message">loading</string>
     <string name="error_message">error</string>
 </resources>
