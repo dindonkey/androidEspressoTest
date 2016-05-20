@@ -5,9 +5,6 @@ import javax.inject.Singleton;
 import dagger.Component;
 import it.dindokey.testespresso.app.view.MainActivity;
 
-/**
- * Created by simone on 3/10/16.
- */
 @Singleton
 @Component (modules = AppModule.class)
 public interface AppComponent

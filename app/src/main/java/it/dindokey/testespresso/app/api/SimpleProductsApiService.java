@@ -5,16 +5,12 @@ import java.util.List;
 import rx.Observable;
 import rx.Subscriber;
 
-/**
- * Created by simone on 2/8/16.
- */
 public class SimpleProductsApiService implements ProductsApiService
 {
-    private HttpClient httpClient;
+    private final HttpClient httpClient;
 
     public SimpleProductsApiService(HttpClient httpClient)
     {
-
         this.httpClient = httpClient;
     }
 

@@ -6,15 +6,17 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by simone on 3/16/16.
- */
 public class ProductsModel implements Parcelable
 {
     private List<String> items;
 
     public ProductsModel() {
         items = new ArrayList<String>();
+    }
+
+    public ProductsModel(List<String> items)
+    {
+        this.items = items;
     }
 
     protected ProductsModel(Parcel in)

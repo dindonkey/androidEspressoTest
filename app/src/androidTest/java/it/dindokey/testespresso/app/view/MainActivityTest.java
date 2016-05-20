@@ -16,7 +16,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 import javax.inject.Inject;
 
@@ -35,9 +35,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by simone on 2/3/16.
- */
+@SuppressWarnings("unused")
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class MainActivityTest extends AppTestCase
@@ -45,6 +43,7 @@ public class MainActivityTest extends AppTestCase
     @Inject
     ProductsApiService mockedProductsApiService;
 
+    @SuppressWarnings("unchecked")
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule(MainActivity.class,
             true,
@@ -74,7 +73,7 @@ public class MainActivityTest extends AppTestCase
     }
 
     @Test
-    public void show_product_list() throws Exception
+    public void show_product_list()
     {
         when(mockedProductsApiService.getProducts()).thenReturn(testProductsObservable());
 
@@ -85,7 +84,7 @@ public class MainActivityTest extends AppTestCase
     }
 
     @Test
-    public void retain_products_on_rotation() throws Exception
+    public void retain_products_on_rotation()
     {
         when(mockedProductsApiService.getProducts()).thenReturn(testProductsObservable());
 
@@ -98,7 +97,7 @@ public class MainActivityTest extends AppTestCase
     }
 
     @Test
-    public void refresh_product_list() throws Exception
+    public void refresh_product_list()
     {
         mActivityRule.launchActivity(new Intent());
         mActivityRule.getActivity().runOnUiThread(new Runnable()
@@ -106,7 +105,8 @@ public class MainActivityTest extends AppTestCase
             @Override
             public void run()
             {
-                mActivityRule.getActivity().refreshProductList(Arrays.asList("test product"));
+                mActivityRule.getActivity().refreshProductList(Collections.singletonList(
+                        "test product"));
             }
         });
 
@@ -114,7 +114,7 @@ public class MainActivityTest extends AppTestCase
     }
 
     @Test
-    public void show_loading_message() throws Exception
+    public void show_loading_message()
     {
         mActivityRule.launchActivity(new Intent());
         mActivityRule.getActivity().runOnUiThread(new Runnable()
@@ -131,7 +131,7 @@ public class MainActivityTest extends AppTestCase
     }
 
     @Test
-    public void show_load_error_message() throws Exception
+    public void show_load_error_message()
     {
         mActivityRule.launchActivity(new Intent());
         mActivityRule.getActivity().runOnUiThread(new Runnable()
@@ -148,7 +148,7 @@ public class MainActivityTest extends AppTestCase
     }
 
     @Test
-    public void show_load_error_if_occours() throws Exception
+    public void show_load_error_if_occours()
     {
         when(mockedProductsApiService.getProducts()).thenReturn(brokenProductsObservable());
         mActivityRule.launchActivity(new Intent());
@@ -170,7 +170,7 @@ public class MainActivityTest extends AppTestCase
 
 
     @After
-    public void tearDown() throws Exception
+    public void tearDown()
     {
         mActivityRule.getActivity().finish();
     }

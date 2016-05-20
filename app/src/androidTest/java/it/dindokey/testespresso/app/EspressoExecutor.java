@@ -8,9 +8,6 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by simone on 3/14/16.
- */
 public class EspressoExecutor extends ThreadPoolExecutor implements IdlingResource
 {
 
@@ -19,14 +16,13 @@ public class EspressoExecutor extends ThreadPoolExecutor implements IdlingResour
 
     private static EspressoExecutor singleton;
 
-    public EspressoExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {
-        super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
+    private EspressoExecutor(BlockingQueue<Runnable> workQueue) {
+        super(0, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, workQueue);
     }
 
     public static EspressoExecutor getCachedThreadPool() {
         if (singleton == null) {
-            singleton = new EspressoExecutor(0, Integer.MAX_VALUE,
-                    60L, TimeUnit.SECONDS,
+            singleton = new EspressoExecutor(
                     new SynchronousQueue<Runnable>());
             Espresso.registerIdlingResources(singleton);
         }

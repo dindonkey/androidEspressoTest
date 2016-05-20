@@ -1,113 +1,48 @@
 package it.dindokey.testespresso.app.presenter;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
-import it.dindokey.testespresso.app.ModelViewHolder;
-import it.dindokey.testespresso.app.ObservableCache;
-import it.dindokey.testespresso.app.SchedulerManager;
 import it.dindokey.testespresso.app.api.ProductsApiService;
-import it.dindokey.testespresso.app.model.ProductsModel;
-import rx.Observable;
-import rx.Observer;
-import rx.Subscription;
+import it.dindokey.testespresso.app.cache.ModelCache;
+import it.dindokey.testespresso.app.rx.ObservableExecutor;
+import it.dindokey.testespresso.app.view.MainView;
 
-/**
- * Created by simone on 2/24/16.
- */
 public class MainPresenter
 {
-    private SchedulerManager schedulerManager;
-    private ObservableCache observableCache;
-    private ProductsApiService productsApiService;
+    private final ObservableExecutor observableExecutor;
+    private final ModelCache modelCache;
+    private final ProductsApiService productsApiService;
 
-    private Subscription subscription;
-    private Observer<List<String>> observer;
-
-    @Inject
     public MainPresenter(ProductsApiService productsApiService,
-                         SchedulerManager schedulerManager,
-                         ObservableCache observableCache)
+                         ObservableExecutor observableExecutor,
+                         ModelCache modelCache)
     {
         this.productsApiService = productsApiService;
-        this.schedulerManager = schedulerManager;
-        this.observableCache = observableCache;
+        this.observableExecutor = observableExecutor;
+        this.modelCache = modelCache;
     }
 
-    public void resume(ModelViewHolder modelViewHolder)
+    public void resume(MainView view)
     {
-        observer = createObserver(modelViewHolder);
-        if (null != modelViewHolder.getModel())
+        if (null != modelCache.model())
         {
-            modelViewHolder.getView().refreshProductList(modelViewHolder.getModel().getItems());
+            view.refreshProductList(modelCache.model()
+                    .getItems()); //TODO: refereshProductList should work with model
         } else
         {
-            loadData();
-            modelViewHolder.getView().showLoading();
+            loadData(view);
+            view.showLoading();
         }
     }
 
-    public void loadData()
+    private void loadData(MainView view)
     {
-        if (null == observableCache.observable())
-        {
-            observableCache.store(productsApiService
-                    .getProducts()
-                    .compose(this.<List<String>>applySchedulers())
-                    .replay());
-
-            observableCache.observable().connect();
-        }
-
-        subscription = observableCache.observable().subscribe(observer);
+        ProductsListSubscriber productsListSubscriber = new ProductsListSubscriber(view,
+                modelCache);
+        observableExecutor.execute(productsApiService.getProducts(), productsListSubscriber);
     }
 
     public void pause()
     {
-        if (null != subscription)
-        {
-            subscription.unsubscribe();
-        }
+        observableExecutor.unsubscribe();
     }
 
-    private Observer<List<String>> createObserver(final ModelViewHolder modelViewHolder)
-    {
-        return new Observer<List<String>>()
-        {
-            @Override
-            public void onCompleted()
-            {
-                observableCache.clear();
-            }
-
-            @Override
-            public void onError(Throwable e)
-            {
-                modelViewHolder.getView().showError();
-            }
-
-            @Override
-            public void onNext(List<String> strings)
-            {
-                ProductsModel productsModel = new ProductsModel();
-                productsModel.setItems(strings);
-                modelViewHolder.setModel(productsModel);
-                modelViewHolder.getView().refreshProductList(strings);
-            }
-        };
-    }
-
-    <T> Observable.Transformer<T, T> applySchedulers()
-    {
-        return new Observable.Transformer<T, T>()
-        {
-            @Override
-            public Observable<T> call(Observable<T> observable)
-            {
-                return observable.subscribeOn(schedulerManager.computation())
-                        .observeOn(schedulerManager.mainThread());
-            }
-        };
-    }
 }

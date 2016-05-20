@@ -2,43 +2,53 @@ package it.dindokey.testespresso.app.view;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ListView;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import it.dindokey.testespresso.app.App;
-import it.dindokey.testespresso.app.ModelViewHolder;
-import it.dindokey.testespresso.app.presenter.MainPresenter;
 import it.dindokey.testespresso.app.R;
+import it.dindokey.testespresso.app.api.ProductsApiService;
+import it.dindokey.testespresso.app.cache.InstanceStateCache;
+import it.dindokey.testespresso.app.presenter.MainPresenter;
+import it.dindokey.testespresso.app.rx.CacheObservableExecutor;
 
 public class MainActivity extends AppCompatActivity implements MainView
 {
     private ProductListViewAdapter productListViewAdapter;
 
-    @Inject MainPresenter mainPresenter;
-    private ModelViewHolder modelViewHolder;
+    @Inject
+    ProductsApiService productsApiService;
+    @Inject
+    CacheObservableExecutor observableExecutor;
+    @Inject
+    InstanceStateCache instanceStateCache;
+
+    private MainPresenter mainPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ((App)getApplication()).getComponent().inject(this);
+        ((App) getApplication()).getComponent().inject(this);
+
+        productListViewAdapter = new ProductListViewAdapter(this
+        );
 
         ListView listView = (ListView) findViewById(R.id.list_view);
-
-        productListViewAdapter = new ProductListViewAdapter(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1);
-        listView.setAdapter(productListViewAdapter);
-
+        if (null != listView)
+        {
+            listView.setAdapter(productListViewAdapter);
+        }
+        instanceStateCache.initModelFrom(savedInstanceState);
+        mainPresenter = new MainPresenter(productsApiService, observableExecutor,
+                instanceStateCache);
         //TODO verify leak passing this
-        modelViewHolder = new ModelViewHolder(this, savedInstanceState);
-        mainPresenter.resume(modelViewHolder);
+        mainPresenter.resume(this);
     }
 
     @Override
@@ -51,21 +61,21 @@ public class MainActivity extends AppCompatActivity implements MainView
     @Override
     public void showLoading()
     {
-        productListViewAdapter.setValues(Arrays.asList(getString(R.string.loading_message)));
+        productListViewAdapter.setValues(Collections.singletonList(getString(R.string.loading_message)));
         productListViewAdapter.reload();
     }
 
     @Override
     public void showError()
     {
-        productListViewAdapter.setValues(Arrays.asList(getString(R.string.error_message)));
+        productListViewAdapter.setValues(Collections.singletonList(getString(R.string.error_message)));
         productListViewAdapter.reload();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState)
     {
-        modelViewHolder.saveInstanceState(outState);
+        instanceStateCache.saveModelTo(outState);
     }
 
     @Override

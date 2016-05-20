@@ -1,6 +1,6 @@
 package it.dindonkey.testespresso.app;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -11,13 +11,11 @@ import rx.schedulers.TestScheduler;
 
 import static rx.Observable.just;
 
-/**
- * Created by simone on 5/2/16.
- */
+@SuppressWarnings("unused")
 public class AppTestCase
 {
-    protected List<String> sampleProducts = Arrays.asList("test product");
-    protected TestScheduler _God_scheduler = new TestScheduler();
+    protected final List<String> sampleProducts = Collections.singletonList("test product");
+    private final TestScheduler _God_scheduler = new TestScheduler();
 
     protected Observable<List<String>> delayedProductsObservable()
     {
