@@ -16,8 +16,8 @@ import static rx.Observable.just;
  */
 public class AppTestCase
 {
-    protected List<String> sampleProducts = Arrays.asList("test product");
-    private TestScheduler _God_scheduler = new TestScheduler();
+    protected final List<String> sampleProducts = Arrays.asList("test product");
+    private final TestScheduler _God_scheduler = new TestScheduler();
 
     protected Observable<List<String>> delayedProductsObservable()
     {

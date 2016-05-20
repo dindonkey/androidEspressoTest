@@ -10,7 +10,7 @@ import rx.Subscriber;
  */
 public class SimpleProductsApiService implements ProductsApiService
 {
-    private HttpClient httpClient;
+    private final HttpClient httpClient;
 
     public SimpleProductsApiService(HttpClient httpClient)
     {

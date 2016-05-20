@@ -18,9 +18,9 @@ import rx.observables.ConnectableObservable;
  */
 public class CacheObservableExecutor implements ObservableExecutor
 {
-    private SchedulerManager schedulerManager;
+    private final SchedulerManager schedulerManager;
     private Subscription subscription;
-    private ObservableCache observableCache;
+    private final ObservableCache observableCache;
 
     @Inject
     public CacheObservableExecutor(ObservableCache observableCache, SchedulerManager schedulerManager)

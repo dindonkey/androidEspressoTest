@@ -8,8 +8,8 @@ import rx.Scheduler;
 public class SchedulerManager
 {
 
-    private Scheduler computation;
-    private Scheduler mainThread;
+    private final Scheduler computation;
+    private final Scheduler mainThread;
 
     public SchedulerManager(Scheduler computation, Scheduler mainThread)
     {

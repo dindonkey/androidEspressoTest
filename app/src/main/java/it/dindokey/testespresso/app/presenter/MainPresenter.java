@@ -10,9 +10,9 @@ import it.dindokey.testespresso.app.view.MainView;
  */
 public class MainPresenter
 {
-    private ObservableExecutor observableExecutor;
-    private ModelCache modelCache;
-    private ProductsApiService productsApiService;
+    private final ObservableExecutor observableExecutor;
+    private final ModelCache modelCache;
+    private final ProductsApiService productsApiService;
 
     public MainPresenter(ProductsApiService productsApiService,
                          ObservableExecutor observableExecutor,
