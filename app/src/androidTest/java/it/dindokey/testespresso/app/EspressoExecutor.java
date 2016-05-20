@@ -8,9 +8,6 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by simone on 3/14/16.
- */
 public class EspressoExecutor extends ThreadPoolExecutor implements IdlingResource
 {
 

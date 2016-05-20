@@ -18,9 +18,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by simone on 5/17/16.
- */
 @RunWith(MockitoJUnitRunner.class)
 public class CacheObservableExecutorTest
 {

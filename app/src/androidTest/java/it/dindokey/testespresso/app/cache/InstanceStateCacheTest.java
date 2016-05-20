@@ -10,9 +10,6 @@ import it.dindonkey.testespresso.app.AppTestCase;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by simone on 5/19/16.
- */
 public class InstanceStateCacheTest extends AppTestCase
 {
 

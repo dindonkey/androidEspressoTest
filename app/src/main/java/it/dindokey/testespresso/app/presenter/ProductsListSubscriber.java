@@ -7,9 +7,6 @@ import it.dindokey.testespresso.app.model.ProductsModel;
 import it.dindokey.testespresso.app.view.MainView;
 import rx.Observer;
 
-/**
- * Created by simone on 5/13/16.
- */
 public class ProductsListSubscriber implements Observer<List<String>>
 {
     private final MainView view;

@@ -4,9 +4,6 @@ import android.os.Bundle;
 
 import it.dindokey.testespresso.app.model.ProductsModel;
 
-/**
- * Created by simone on 5/13/16.
- */
 public class InstanceStateCache implements ModelCache
 {
     public static final String MODEL = "model";

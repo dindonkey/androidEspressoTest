@@ -2,9 +2,6 @@ package it.dindokey.testespresso.app.rx;
 
 import rx.Scheduler;
 
-/**
- * Created by simone on 3/9/16.
- */
 public class SchedulerManager
 {
 

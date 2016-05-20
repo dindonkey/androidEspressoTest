@@ -13,9 +13,6 @@ import it.dindokey.testespresso.app.rx.SchedulerManager;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by simone on 3/10/16.
- */
 @Module
 public class AppModule
 {

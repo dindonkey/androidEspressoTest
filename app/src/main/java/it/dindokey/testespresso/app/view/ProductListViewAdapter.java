@@ -6,9 +6,6 @@ import android.widget.ArrayAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by simone on 2/3/16.
- */
 class ProductListViewAdapter extends ArrayAdapter<String>
 {
     private List<String> values = new ArrayList<String>();

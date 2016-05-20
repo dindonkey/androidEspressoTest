@@ -5,9 +5,6 @@ import it.dindokey.testespresso.app.cache.ModelCache;
 import it.dindokey.testespresso.app.rx.ObservableExecutor;
 import it.dindokey.testespresso.app.view.MainView;
 
-/**
- * Created by simone on 2/24/16.
- */
 public class MainPresenter
 {
     private final ObservableExecutor observableExecutor;

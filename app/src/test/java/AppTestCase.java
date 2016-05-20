@@ -9,9 +9,6 @@ import rx.schedulers.TestScheduler;
 
 import static rx.Observable.just;
 
-/**
- * Created by simone on 5/2/16.
- */
 class AppTestCase
 {
     private final List<String> sampleProducts = Arrays.asList("test product");

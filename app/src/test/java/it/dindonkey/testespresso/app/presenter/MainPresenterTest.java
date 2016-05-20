@@ -23,9 +23,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by simone on 2/29/16.
- */
 @RunWith(MockitoJUnitRunner.class)
 public class MainPresenterTest extends AppTestCase
 {

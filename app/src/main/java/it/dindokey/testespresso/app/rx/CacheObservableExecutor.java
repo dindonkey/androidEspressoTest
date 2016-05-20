@@ -13,9 +13,6 @@ import rx.Subscription;
 import rx.functions.Action0;
 import rx.observables.ConnectableObservable;
 
-/**
- * Created by simone on 5/6/16.
- */
 public class CacheObservableExecutor implements ObservableExecutor
 {
     private final SchedulerManager schedulerManager;

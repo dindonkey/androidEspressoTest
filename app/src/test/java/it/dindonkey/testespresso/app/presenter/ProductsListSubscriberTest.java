@@ -16,9 +16,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-/**
- * Created by simone on 5/17/16.
- */
 @RunWith(MockitoJUnitRunner.class)
 public class ProductsListSubscriberTest extends AppTestCase
 {
